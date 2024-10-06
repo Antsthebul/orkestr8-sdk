@@ -1,0 +1,9 @@
+# virtual envs
+.venv
+venv
+
+# packaging
+*.egg-info
+
+# Cache
+__pycache__
