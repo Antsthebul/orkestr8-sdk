@@ -13,4 +13,7 @@ dependencies=[
 orkestr8="orkestr8:run"
 
 [project.optional-dependencies]
-dev = ["pytest", "pre-commit"]
+dev = ["pytest", "pre-commit",  "pytest-cov"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=orkestr8"
