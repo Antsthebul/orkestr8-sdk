@@ -1,0 +1,16 @@
+[MAIN]
+
+# List of plugins (as comma separated values of python modules names) to load,
+# usually to register additional checkers.
+load-plugins=
+    pylint.extensions.bad_builtin,
+
+[MESSAGE CONTROL]
+disable=all
+
+enable=W0141,W0611
+
+[DEPRECATED_BUILTINS]
+
+# List of builtins function names that should not be used, separated by a comma
+bad-functions=map

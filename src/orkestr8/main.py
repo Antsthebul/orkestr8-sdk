@@ -4,7 +4,7 @@ from enum import Enum
 import dotenv
 
 from orkestr8.cli import parse_args
-from orkestr8.commands import update
+from orkestr8.commands.update import UpdateCommand
 
 
 class Dispatch(Enum):
@@ -33,7 +33,7 @@ def run(args):
     if command == Dispatch.TRAIN:
         pass
     elif command == Dispatch.UPDATE:
-        update.run(args)
+        UpdateCommand.run(args)
 
 
 def main():
