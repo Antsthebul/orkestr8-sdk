@@ -8,6 +8,7 @@ dependencies=[
     "python-dotenv",
     "boto3"
 ]
+readme="README.md"
 
 [project.scripts]
 orkestr8="orkestr8:run"

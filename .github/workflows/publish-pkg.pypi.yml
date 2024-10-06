@@ -1,5 +1,5 @@
 name: Workflow to publish to Pypi
-run-name: Publish ${{ github.ref }} to Pypi
+run-name: Publish ${{ github.ref_name }} to Pypi
 on:
   push:
     tags:
@@ -8,7 +8,7 @@ jobs:
   build:
     name: Build distribution
     runs-on: Ubuntu-latest
-
+    uses: ./.github/workflows/test-and-lint.yml
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python

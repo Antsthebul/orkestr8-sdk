@@ -1,0 +1,16 @@
+name: Python Testing and Linting workflow
+run-name: Testing ${{github.ref}}
+on: push
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Poetry Action
+      uses: snok/install-poetry@v1.4.1
+    - name: Install requirements
+      run: poetry install
+    - name: Test and Lint
+      run: make test-all
