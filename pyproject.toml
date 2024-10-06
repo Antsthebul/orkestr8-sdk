@@ -1,6 +1,6 @@
 [project]
 name = "orkestr8-sdk"
-version="0.0.101"
+version="0.0.103"
 requires-python=">=3.8"
 authors=[{name="Antsthebul"}]
 description="SDK to easily interact with Orkestr8 ML entities"
@@ -13,7 +13,7 @@ dependencies=[
 orkestr8="orkestr8:run"
 
 [project.optional-dependencies]
-dev = ["pytest", "pre-commit",  "pytest-cov"]
+dev = ["pytest", "pre-commit",  "pytest-cov", "mypy"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=orkestr8"

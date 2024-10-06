@@ -1,17 +1,10 @@
 import os
 from dataclasses import dataclass
-from typing import Union
 from unittest.mock import patch
 
 import pytest
 
-from orkestr8.commands.update import UpdateCommand
-
-
-@dataclass
-class UpdateArgs:
-    remote_file_path: Union[str, None]
-    dest_file_path: Union[str, None]
+from orkestr8.commands.update import UpdateArgs, UpdateCommand
 
 
 @dataclass
@@ -36,6 +29,7 @@ class TestUpdateCommand:
             UpdateArgs(remote_file_path=remote_path, dest_file_path=self.mock_dest_dir)
         )
 
-        UpdateCommand.run(args)
+        uc = UpdateCommand(args)
+        uc.run()
 
         assert mock_get_object.call_args.args[0] == remote_path

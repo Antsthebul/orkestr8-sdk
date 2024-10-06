@@ -2,3 +2,6 @@
 
 test:
 	pytest
+
+lint:
+	mypy src/

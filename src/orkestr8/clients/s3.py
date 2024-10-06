@@ -2,13 +2,13 @@ import os
 from io import BytesIO
 from typing import BinaryIO
 
-import boto3
+import boto3  # type: ignore
 
 from .protocol import DatalakeProtocol
 
 
 class S3Client:
-    def __init__(self, aws_client):
+    def __init__(self, aws_client) -> None:
         self.client = aws_client
 
     @staticmethod

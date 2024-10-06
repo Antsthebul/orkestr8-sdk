@@ -30,14 +30,17 @@ def check_env_variables(args):
 
 
 def run(args):
+    commands_to_run = []
     command = Dispatch(args.command)
     if command == Dispatch.TRAIN:
-        TrainCommand.run(args)
+        commands_to_run.append(TrainCommand(args))
     elif command == Dispatch.UPDATE:
-        UpdateCommand.run(args)
+        commands_to_run.append(UpdateCommand(args))
     elif command == Dispatch.RUN:
-        UpdateCommand.run(args)
-        TrainCommand.run(args)
+        commands_to_run.append(UpdateCommand(args))
+        commands_to_run.append(TrainCommand(args))
+    for c in commands_to_run:
+        c.run()
 
 
 def main():
