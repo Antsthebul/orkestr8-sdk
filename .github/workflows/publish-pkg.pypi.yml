@@ -1,5 +1,5 @@
 name: Workflow to publish to Pypi
-run-name: Publish {{ github.ref }} to Pypi
+run-name: Publish ${{ github.ref }} to Pypi
 on:
   push:
     tags:
