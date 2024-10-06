@@ -6,4 +6,8 @@ venv
 *.egg-info
 
 # Cache
-__pycache__
+__pycache__/
+*.pyc
+
+# Envs
+.env
