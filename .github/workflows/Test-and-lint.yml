@@ -9,6 +9,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install requirements
-      run: pip install ".[dev]" --user
+      run: python3 -m pip install ".[dev]" --user
     - name: Test and Lint
       run: make test-all
