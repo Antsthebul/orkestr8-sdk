@@ -3,8 +3,10 @@ from uuid import uuid4
 
 from orkestr8.clients.data_lake_client import DataLakeClient
 
+from .base import Command
 
-class UpdateCommand:
+
+class UpdateCommand(Command):
     @staticmethod
     def __rename_dir(old, new_=None):
         new_name = new_

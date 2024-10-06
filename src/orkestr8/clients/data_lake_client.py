@@ -47,7 +47,5 @@ class DataLakeClient:
         """Retrieves an object from the remote bucket using the `obj_name` and
         writes to `f`. This will set the file cursor to 0 and is ready to use."""
 
-        yield self.client.download_object_as_file(
-            self.bucket, remote_file_path, dest_file_path, f
-        )
+        yield self.client.download_object_as_file(self.bucket, remote_file_path, f)
         f.close()

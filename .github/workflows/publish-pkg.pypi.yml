@@ -30,7 +30,7 @@ jobs:
         path: dist/
 
   publish-to-pypi:
-    name: PUblish Pyhton distribution
+    name: Publish Pyhton distribution
     needs:
       - build
     runs-on: ubuntu-latest

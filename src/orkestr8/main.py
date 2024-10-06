@@ -4,6 +4,7 @@ from enum import Enum
 import dotenv
 
 from orkestr8.cli import parse_args
+from orkestr8.commands.train import TrainCommand
 from orkestr8.commands.update import UpdateCommand
 
 
@@ -31,9 +32,12 @@ def check_env_variables(args):
 def run(args):
     command = Dispatch(args.command)
     if command == Dispatch.TRAIN:
-        pass
+        TrainCommand.run(args)
     elif command == Dispatch.UPDATE:
         UpdateCommand.run(args)
+    elif command == Dispatch.RUN:
+        UpdateCommand.run(args)
+        TrainCommand.run(args)
 
 
 def main():
