@@ -11,3 +11,6 @@ dependencies=[
 
 [project.scripts]
 orkestr8="orkestr8:run"
+
+[project.optional-dependencies]
+dev = ["pytest", "pre-commit"]
