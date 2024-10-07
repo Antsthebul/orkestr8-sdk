@@ -7,7 +7,7 @@ on:
       - completed
 jobs:
   build:
-    if: startswith(${{ github.ref_name }}, 'v')
+    if: startsWith(github.ref_name, 'v')
     name: Build distribution
     runs-on: Ubuntu-latest
 
@@ -32,7 +32,7 @@ jobs:
         path: dist/
 
   publish-to-pypi:
-    name: Publish Pyhton distribution
+    name: Publish Python distribution
     needs:
       - build
     runs-on: ubuntu-latest
