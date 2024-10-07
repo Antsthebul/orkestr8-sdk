@@ -1,15 +1,13 @@
 name: Workflow to publish to Pypi
 run-name: Publish '${{ github.ref_name }}' to PyPi
 on:
-  push:
-    tags:
-      - v*.*.*
   workflow_run:
     workflows: [Python Testing and Linting workflow]
     types:
       - completed
 jobs:
   build:
+    if: startswith(github.ref_name, 'v')
     name: Build distribution
     runs-on: Ubuntu-latest
 
