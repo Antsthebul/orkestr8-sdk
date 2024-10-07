@@ -5,6 +5,9 @@ on:
     workflows: [Python Testing and Linting workflow]
     types:
       - completed
+  push:
+    tags:
+      - 'v*'
 jobs:
   sanity:
     name: useless
