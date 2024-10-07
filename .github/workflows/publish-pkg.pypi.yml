@@ -7,7 +7,7 @@ on:
       - completed
 jobs:
   build:
-    if: startswith(github.ref_name, 'v')
+    if: startswith(${{ github.ref_name }}, 'v')
     name: Build distribution
     runs-on: Ubuntu-latest
 
