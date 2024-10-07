@@ -9,7 +9,7 @@ lint:
 test-all: test lint
 
 tag: edit-version
-	git commit -am "Bump version" && git tag -a ${version} -m ${message}
+	git commit -am "Bump version" && git tag -a ${version} -m "${message}"
 
 edit-version:  # call like make tag version=''
-	python -m version_editor ${version} ${message}
+	python -m version_editor "${version}" ${message}

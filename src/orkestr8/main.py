@@ -31,7 +31,7 @@ def check_env_variables(args):
                 os.environ[v] = attr
 
 
-def run(args):
+def run(args) -> None:
     commands_to_run: List[Command] = []
     command = Dispatch(args.command)
     if command == Dispatch.TRAIN:
