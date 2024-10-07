@@ -9,13 +9,6 @@ on:
     tags:
       - 'v*'
 jobs:
-  sanity:
-    name: useless
-    runs-on: Ubuntu-latest
-    steps:
-      - name: Print ref_name
-        run: echo "Ref name is ${{ github.ref_name }}"
-
   build:
     if: startsWith(github.ref_name, 'v')
     name: Build distribution
