@@ -1,3 +1,4 @@
+import logging
 import os
 from enum import Enum
 from typing import List
@@ -9,6 +10,9 @@ from orkestr8.commands.base import Command
 from orkestr8.commands.train import TrainCommand
 from orkestr8.commands.update import UpdateCommand
 
+logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO)
+
 
 class Dispatch(Enum):
     TRAIN = "train"
@@ -17,6 +21,16 @@ class Dispatch(Enum):
 
 
 dotenv.load_dotenv()
+
+
+def handle_env_vars(args):
+    assign_env_variables(args)
+    check_env_variables(args)
+
+
+def assign_env_variables(args):
+    os.environ["DEST_FILE_PATH"] = args.dest_file_path
+    os.environ["REMOTE_FILE_PATH"] = args.remote_file_path
 
 
 def check_env_variables(args):
@@ -47,8 +61,8 @@ def run(args) -> None:
 
 def main():
     args = parse_args()
-    print("wtf => ", args)
-    check_env_variables(args)
+    logger.info(args)
+    handle_env_vars(args)
     run(args)
 
 

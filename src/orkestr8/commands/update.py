@@ -28,18 +28,14 @@ class UpdateCommand(Command[UpdateArgs]):
 
     @staticmethod
     def parse(args) -> UpdateArgs:
-        return UpdateArgs(
-            args.update.remote_file_path, args.update.dest_file_path, args.default_yes
-        )
+        return UpdateArgs(args.remote_file_path, args.dest_file_path, args.default_yes)
 
     def run(self):
         """Pulls down data from repo"""
         AWS_BUCKET_NAME = os.environ["AWS_BUCKET_NAME"]
         args = self.args
-        remote_path, dest_path = (
-            args.remote_file_path,
-            args.dest_file_path,
-        )
+        remote_path = args.remote_file_path or os.environ["REMOTE_FILE_PATH"]
+        dest_path = args.dest_file_path or os.environ["DEST_FILE_PATH"]
 
         cl = DataLakeClient("s3", AWS_BUCKET_NAME)
         if not args.default_yes:
