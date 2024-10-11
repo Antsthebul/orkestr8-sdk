@@ -1,18 +1,31 @@
 from argparse import ArgumentParser
 
 
-def parse_args():
-    base_parser = ArgumentParser(add_help=False)
-    base_parser.add_argument("--aws-access-key", nargs="?", action="store")
-    base_parser.add_argument("--aws-secret-key", nargs="?", action="store")
-    base_parser.add_argument("--aws-bucket-name", nargs="?", action="store")
-    base_parser.add_argument("--project-location", nargs="?", action="store")
-    base_parser.add_argument(
+def _build_global_option_parser() -> ArgumentParser:
+    "Parent parser to define optoins used for ALL commands"
+    parser = ArgumentParser(add_help=False)
+    parser.add_argument("--aws-access-key", nargs="?", action="store")
+    parser.add_argument("--aws-secret-key", nargs="?", action="store")
+    parser.add_argument("--aws-bucket-name", nargs="?", action="store")
+    parser.add_argument(
         "-y",
         dest="default_yes",
         action="store_true",
         help="Apply yes by default to all inputs",
     )
+    return parser
+
+
+def _build_file_location_parser() -> ArgumentParser:
+    parser = ArgumentParser(add_help=False)
+    parser.add_argument("--remote-file-path", nargs="?")
+    parser.add_argument("--dest-file-path", nargs="?")
+    return parser
+
+
+def parse_args():
+    all_option_parser = _build_global_option_parser()
+    file_option_parser = _build_file_location_parser()
 
     # This creates 'mutually' exclusive parsers
     parser = ArgumentParser(prog="Orchkestr8 ML train runner")
@@ -20,7 +33,7 @@ def parse_args():
     # This creates 'mutually' exclusive parsers
 
     train_parser = subparsers.add_parser(
-        "train", help="Runs the training logic only", parents=[base_parser]
+        "train", help="Runs the training logic only", parents=[all_option_parser]
     )
     train_parser.add_argument(
         "model_module",
@@ -29,7 +42,9 @@ def parse_args():
     )
 
     run_parser = subparsers.add_parser(
-        "run", help="Runs the data update and training logic", parents=[base_parser]
+        "run",
+        help="Runs the data update and training logic",
+        parents=[all_option_parser, file_option_parser],
     )
     run_parser.add_argument(
         "--model-module",
@@ -44,7 +59,7 @@ def parse_args():
     )
 
     update_parser = subparsers.add_parser(
-        "update", help="Runs the data update function.", parents=[base_parser]
+        "update", help="Runs the data update function.", parents=[all_option_parser]
     )
     update_parser.add_argument(
         "remote_file_path", help="Where to direct Orkestr8 to pull the file from"

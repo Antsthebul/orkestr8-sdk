@@ -8,7 +8,7 @@ lint:
 
 test-all: test lint
 
-tag: edit-version
+tag: test-all edit-version
 	git commit -am "Bump version" && git tag -a ${version} -m "${message}"
 
 edit-version:  # call like make tag version=''
