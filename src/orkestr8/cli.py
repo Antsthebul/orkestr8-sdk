@@ -39,6 +39,6 @@ def parse_args():
     parser.add_argument("--aws-access-key", nargs="?", action="store")
     parser.add_argument("--aws-secret-key", nargs="?", action="store")
     parser.add_argument("--aws-bucket-name", nargs="?", action="store")
-    parser.add_argument("--project_location", nargs="?", action="store")
+    parser.add_argument("--project-location", nargs="?", action="store")
     parser.add_argument("-y", dest="default_yes", action="store_true")
     return parser.parse_args()
