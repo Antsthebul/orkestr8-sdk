@@ -34,7 +34,7 @@ def assign_env_variables(args):
 
 
 def check_env_variables(args):
-    required_variables = ["AWS_ACCESS_KEY", "AWS_SECRET_KEY"]
+    required_variables = ["AWS_ACCESS_KEY", "AWS_SECRET_KEY", "AWS_BUCKET_NAME"]
 
     for v in required_variables:
         if not os.environ.get(v):
