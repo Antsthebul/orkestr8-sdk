@@ -18,5 +18,5 @@ with open("./pyproject.toml") as f:
             line = "version=" + f'"{tag}"\n'
         lines.append(line)
 
-with open("./pyproject.toml", "w") as f:
+with open("./pyproject.toml", "w", newline="\n") as f:
     f.writelines(lines)

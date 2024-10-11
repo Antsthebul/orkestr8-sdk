@@ -47,6 +47,7 @@ def run(args) -> None:
 
 def main():
     args = parse_args()
+    print("wtf => ", args)
     check_env_variables(args)
     run(args)
 
