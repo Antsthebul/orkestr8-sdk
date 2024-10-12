@@ -6,7 +6,7 @@ import subprocess
 
 
 def install():
-    with "log.txt" as f:
+    with open("log.txt", "w") as f:
         subprocess.run(["tar -xvzf foodenie_ml.tar.gz"], stdout=f)
         subprocess.run(
             [
