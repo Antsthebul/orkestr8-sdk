@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from orkestr8.clients.data_lake_client import DataLakeClient
 
+from ..installer import install
 from .base import Command
 
 
@@ -63,6 +64,7 @@ class UpdateCommand(Command[UpdateArgs]):
         except Exception as e:
             self.__rename_dir(new_name, dest_path)
             print(f"Failed to perform update operation. {type(e).__name__}:{str(e)}")
-        finally:
+        else:
             os.removedirs(new_name)
             print("Successfully updated")
+        install()

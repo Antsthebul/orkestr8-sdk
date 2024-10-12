@@ -21,8 +21,11 @@ class TestUpdateCommand:
         if os.path.exists(self.mock_dest_dir):
             os.rmdir(self.mock_dest_dir)
 
+    @patch("orkestr8.commands.update.install", return_value=None)
     @patch("orkestr8.commands.update.DataLakeClient.get_object", return_value=None)
-    def test_run_command_fetches_object_from_remote(self, mock_get_object):
+    def test_run_command_fetches_object_from_remote(
+        self, mock_get_object, mock_install
+    ):
         remote_path = "path"
         os.mkdir(self.mock_dest_dir)
         args = Args(
@@ -33,3 +36,4 @@ class TestUpdateCommand:
         uc.run()
 
         assert mock_get_object.call_args.args[0] == remote_path
+        mock_install.assert_called()
