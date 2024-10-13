@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 import sys
@@ -9,6 +10,8 @@ from orkestr8.clients.data_lake_client import DataLakeClient
 
 from ..installer import install
 from .base import Command
+
+logger = logging.getLogger()
 
 
 @dataclass
@@ -59,16 +62,19 @@ class UpdateCommand(Command[UpdateArgs]):
             if confirm != "y":
                 print("Exiting..")
                 return
+        if Path(dest_path).exists():
+            logger.info("Path exists. Deleting old path")
+            new_name = self.__rename_dir(dest_path)
 
-        new_name = self.__rename_dir(dest_path)
-
-        try:
-            cl.get_object(remote_path, Path(remote_path).name)
-        except Exception as e:
-            self.__rename_dir(new_name, dest_path)
-            print(f"Failed to perform update operation. {type(e).__name__}:{str(e)}")
-            sys.exit(1)
-        else:
-            shutil.rmtree(new_name, ignore_errors=True)
-            print("Successfully updated")
+            try:
+                cl.get_object(remote_path, Path(remote_path).name)
+            except Exception as e:
+                self.__rename_dir(new_name, dest_path)
+                print(
+                    f"Failed to perform update operation. {type(e).__name__}:{str(e)}"
+                )
+                sys.exit(1)
+            else:
+                shutil.rmtree(new_name, ignore_errors=True)
+                print("Successfully updated")
         install()

@@ -18,6 +18,6 @@ class TrainCommand(Command[TrainArgs]):
 
     def run(self):
         """Imports model training module and invokes 'train' function"""
-        sys.path.append(os.getcwd())
+        sys.path.append(os.getcwd() + "/foodenie_ml")
         m = importlib.import_module(self.args.model_module)
         m.train()
