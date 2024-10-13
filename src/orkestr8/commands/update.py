@@ -1,4 +1,5 @@
 import os
+import sys
 from dataclasses import dataclass
 from uuid import uuid4
 
@@ -64,6 +65,7 @@ class UpdateCommand(Command[UpdateArgs]):
         except Exception as e:
             self.__rename_dir(new_name, dest_path)
             print(f"Failed to perform update operation. {type(e).__name__}:{str(e)}")
+            sys.exit(1)
         else:
             os.removedirs(new_name)
             print("Successfully updated")
