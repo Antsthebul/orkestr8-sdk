@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 from uuid import uuid4
 
 from orkestr8.clients.data_lake_client import DataLakeClient
@@ -62,7 +63,7 @@ class UpdateCommand(Command[UpdateArgs]):
         new_name = self.__rename_dir(dest_path)
 
         try:
-            cl.get_object(remote_path, dest_path)
+            cl.get_object(remote_path, Path(remote_path).name)
         except Exception as e:
             self.__rename_dir(new_name, dest_path)
             print(f"Failed to perform update operation. {type(e).__name__}:{str(e)}")
