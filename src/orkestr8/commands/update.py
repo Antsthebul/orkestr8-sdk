@@ -79,5 +79,5 @@ class UpdateCommand(Command[UpdateArgs]):
             if new_name is not None:
                 logger.info("Removing backup file")
                 shutil.rmtree(new_name, ignore_errors=True)
-            print("Successfully updated")
+            logger.info("Successfully updated")
         install()
