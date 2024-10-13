@@ -2,11 +2,15 @@
 Installs ML package on the machine by unzipping file and installing
 """
 
+import logging
 import subprocess
+
+logger = logging.getLogger()
 
 
 def install():
     with open("log.txt", "w") as f:
+        logger.info("Installing foodenie_ml..")
         subprocess.run(["tar -xvzf foodenie_ml.tar.gz"], stdout=f)
         subprocess.run(
             [

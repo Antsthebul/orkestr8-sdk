@@ -60,7 +60,7 @@ class UpdateCommand(Command[UpdateArgs]):
         new_name = self.__rename_dir(dest_path)
 
         try:
-            cl.get_object(remote_path, new_name)
+            cl.get_object(remote_path, dest_path)
         except Exception as e:
             self.__rename_dir(new_name, dest_path)
             print(f"Failed to perform update operation. {type(e).__name__}:{str(e)}")
