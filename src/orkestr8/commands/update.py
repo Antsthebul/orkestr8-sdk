@@ -62,19 +62,19 @@ class UpdateCommand(Command[UpdateArgs]):
             if confirm != "y":
                 print("Exiting..")
                 return
-        if Path(dest_path).exists():
+        path_exists = Path(dest_path).exists()
+        if path_exists:
             logger.info("Path exists. Deleting old path")
             new_name = self.__rename_dir(dest_path)
 
-            try:
-                cl.get_object(remote_path, Path(remote_path).name)
-            except Exception as e:
+        try:
+            cl.get_object(remote_path, Path(remote_path).name)
+        except Exception as e:
+            if path_exists:
                 self.__rename_dir(new_name, dest_path)
-                print(
-                    f"Failed to perform update operation. {type(e).__name__}:{str(e)}"
-                )
-                sys.exit(1)
-            else:
-                shutil.rmtree(new_name, ignore_errors=True)
-                print("Successfully updated")
+            print(f"Failed to perform update operation. {type(e).__name__}:{str(e)}")
+            sys.exit(1)
+        else:
+            shutil.rmtree(new_name, ignore_errors=True)
+            print("Successfully updated")
         install()
