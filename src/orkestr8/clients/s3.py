@@ -41,7 +41,7 @@ class S3Client:
             return
         yield res
         yield from self.list_objects(
-            bucket_name, prefix=prefix, continuation_token=res["NextContinuationToken"]
+            bucket_name, prefix=prefix, continuation_token=data["NextContinuationToken"]
         )
 
     def put_object(self, bucket_name: str, path: str, data: BinaryIO) -> None:
