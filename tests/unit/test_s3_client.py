@@ -24,10 +24,10 @@ class TestS3Client:
             "Contents": [{"Key": "file1.txt", "LastModified": datetime.now()}],
         }
         res_2 = {
-            "NextContinuationToken": None,
+            "ContinuationToken": "ABC",
             "Contents": [{"Key": "file2.txt", "LastModified": datetime.now()}],
         }
-        res_3 = {"NextContinuationToken": None, "Contents": []}
+        res_3 = {"Contents": []}
         bucket_name = "test_bucket"
 
         responses = [res_1, res_2, res_3]
@@ -40,15 +40,12 @@ class TestS3Client:
             pass
 
         low_lvl_client = self.client.client
-        assert low_lvl_client.list_objects_v2.call_count == 3
+        assert low_lvl_client.list_objects_v2.call_count == 2
         assert low_lvl_client.list_objects_v2.call_args_list[0] == call(
             Bucket=bucket_name, Prefix=""
         )
         assert low_lvl_client.list_objects_v2.call_args_list[1] == call(
             Bucket=bucket_name, Prefix="", ContinuationToken="ABC"
-        )
-        assert low_lvl_client.list_objects_v2.call_args_list[2] == call(
-            Bucket=bucket_name, Prefix=""
         )
 
     def test_get_obect(self):

@@ -43,6 +43,8 @@ class S3Client:
         if not res:
             return
         yield res
+        if data.get("NextContinuationToken") is None:
+            return
         yield from self.list_objects(
             bucket_name, prefix=prefix, continuation_token=data["NextContinuationToken"]
         )
