@@ -5,9 +5,10 @@ import sys
 from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
+from typing import List
 from uuid import uuid4
 
-from orkestr8.clients.data_lake_client import DataLakeClient
+from orkestr8.clients.data_lake_client import ClientType, DataLakeClient
 
 from ..installer import install
 from .base import Command
@@ -58,7 +59,7 @@ class UpdateCommand(Command[UpdateArgs]):
         args = self.args
         remote_path, dest_path = args.remote_file_path, args.dest_file_path
 
-        cl = DataLakeClient("s3", AWS_BUCKET_NAME)
+        cl = DataLakeClient(ClientType.S3, AWS_BUCKET_NAME)
         if not args.default_yes:
             confirm = input(
                 "Update is a desctructive operation. The path will be completely overwritten ['Enter y to continue']. "
@@ -87,14 +88,14 @@ class UpdateCommand(Command[UpdateArgs]):
         install()
         self.sync_image_data()
 
-    def sync_image_data(self):
+    def sync_image_data(self) -> None:
         """Pulls down all image data from repo. Maintains 'Key' directory
          structure ie. foo/bar/.txt will exist in ~/foo/bar.txt. Updates the
         state file containing all downloaded files if it exists, else creates it"""
 
         logger.info("Starting image sync process")
         AWS_BUCKET_NAME = os.environ["AWS_BUCKET_NAME"]
-        cl = DataLakeClient("s3", AWS_BUCKET_NAME)
+        cl = DataLakeClient(ClientType.S3, AWS_BUCKET_NAME)
 
         source_of_truth = "training_data_on_server.txt"
         complete_path = f"data/images/{source_of_truth}"
@@ -104,7 +105,7 @@ class UpdateCommand(Command[UpdateArgs]):
             if file:
                 files_on_server = file.readlines()
 
-        files_to_add: list[bytes] = []
+        files_to_add: List[bytes] = []
         for record in cl.list_objects(prefix="data/images"):
             file_name = record["Key"].encode()
 

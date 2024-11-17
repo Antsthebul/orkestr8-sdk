@@ -18,7 +18,7 @@ class DatalakeProtocol(Protocol):
 
     def list_objects(
         self, bucket_name: str, prefix: str
-    ) -> Generator[Result, None, list]:
+    ) -> Generator[Result, None, None]:
         ...
 
     def put_object(self, bucket_name: str, path: str, data: BinaryIO) -> None:

@@ -65,4 +65,4 @@ class DataLakeClient:
 
     def put_object(self, path: str, data: BinaryIO):
         """Adds an object to the bucket while implmementing versioning"""
-        self.client.put_object(path, data)
+        self.client.put_object(self.bucket, path, data)

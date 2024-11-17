@@ -34,11 +34,11 @@ class S3Client:
 
     def list_objects(
         self, bucket_name: str, prefix="", continuation_token=None
-    ) -> Generator[Result, None, list]:
+    ) -> Generator[Result, None, None]:
         data = self.client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         res = data["Contents"]
         if not res:
-            return []
+            return
         yield res
         yield from self.list_objects(
             bucket_name, prefix=prefix, continuation_token=res["NextContinuationToken"]
