@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from unittest.mock import Mock
+from unittest.mock import Mock, call
 
 import pytest
 
@@ -17,7 +17,8 @@ class TestS3Client:
         yield
         mock_client.reset_mock()
 
-    def test_list_objects(self):
+    def test_list_objects_uses_continuation_token_and_executes_correct_calls(self):
+        # ARRANGE
         res_1 = {
             "NextContinuationToken": "ABC",
             "Contents": [{"Key": "file1.txt", "LastModified": datetime.now()}],
@@ -27,16 +28,28 @@ class TestS3Client:
             "Contents": [{"Key": "file2.txt", "LastModified": datetime.now()}],
         }
         res_3 = {"NextContinuationToken": None, "Contents": []}
+        bucket_name = "test_bucket"
 
         responses = [res_1, res_2, res_3]
         self.client.client.list_objects_v2.side_effect = (
             lambda *args, **kwargs: responses.pop(0)
         )
 
-        for batch in self.client.list_objects("test_bucket"):
+        # ACT
+        for batch in self.client.list_objects(bucket_name):
             pass
 
-        assert self.client.client.list_objects_v2.call_count == 3
+        low_lvl_client = self.client.client
+        assert low_lvl_client.list_objects_v2.call_count == 3
+        assert low_lvl_client.list_objects_v2.call_args_list[0] == call(
+            Bucket=bucket_name, Prefix=""
+        )
+        assert low_lvl_client.list_objects_v2.call_args_list[1] == call(
+            Bucket=bucket_name, Prefix="", ContinuationToken="ABC"
+        )
+        assert low_lvl_client.list_objects_v2.call_args_list[2] == call(
+            Bucket=bucket_name, Prefix=""
+        )
 
     def test_get_obect(self):
         pass

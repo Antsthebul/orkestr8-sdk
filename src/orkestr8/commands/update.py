@@ -117,6 +117,7 @@ class UpdateCommand(Command[UpdateArgs]):
         for file_name in files_to_add:
             parent_dirs = "".join(file_name.decode().split("/")[:-1])
             os.makedirs(f"~/{parent_dirs}", exist_ok=True)
+            logger.info(f"Downloading {file_name}")
             cl.get_object(file_name, f"~/{file_name}")
 
         # Update sync file

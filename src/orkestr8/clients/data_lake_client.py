@@ -53,7 +53,7 @@ class DataLakeClient:
             data = self.client.download_object_as_file(self.bucket, remote_file_path)
             yield data
         except Exception as e:
-            _log = f"Failed to download object: {str(e)}"
+            _log = f"Failed to download {remote_file_path}: {str(e)}"
             logger.warning(_log)
             yield None
         else:

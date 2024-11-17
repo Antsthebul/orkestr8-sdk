@@ -35,7 +35,10 @@ class S3Client:
     def list_objects(
         self, bucket_name: str, prefix="", continuation_token=None
     ) -> Generator[List[Result], None, None]:
-        data = self.client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+        args = {"Bucket": bucket_name, "Prefix": prefix}
+        if continuation_token:
+            args["ContinuationToken"] = continuation_token
+        data = self.client.list_objects_v2(**args)
         res = data["Contents"]
         if not res:
             return
