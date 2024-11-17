@@ -1,6 +1,6 @@
 import os
 from io import BytesIO
-from typing import BinaryIO, Generator
+from typing import BinaryIO, Generator, List
 
 import boto3  # type: ignore
 
@@ -34,7 +34,7 @@ class S3Client:
 
     def list_objects(
         self, bucket_name: str, prefix="", continuation_token=None
-    ) -> Generator[Result, None, None]:
+    ) -> Generator[List[Result], None, None]:
         data = self.client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
         res = data["Contents"]
         if not res:

@@ -60,7 +60,7 @@ class DataLakeClient:
             data.close()
 
     def list_objects(self, prefix=""):
-        """Generator to return all objects in a bucket"""
+        """Generator to return all objects in a bucket. Yields a list of Result objects"""
         yield from self.client.list_objects(self.bucket, prefix=prefix)
 
     def put_object(self, path: str, data: BinaryIO):

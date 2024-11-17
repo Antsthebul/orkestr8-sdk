@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import BinaryIO, Generator, Protocol, TypedDict
+from typing import BinaryIO, Generator, List, Protocol, TypedDict
 
 
 class Result(TypedDict):
@@ -18,7 +18,7 @@ class DatalakeProtocol(Protocol):
 
     def list_objects(
         self, bucket_name: str, prefix: str
-    ) -> Generator[Result, None, None]:
+    ) -> Generator[List[Result], None, None]:
         ...
 
     def put_object(self, bucket_name: str, path: str, data: BinaryIO) -> None:

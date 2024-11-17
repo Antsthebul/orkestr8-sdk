@@ -45,10 +45,13 @@ class TestUpdateCommand:
         with patch("orkestr8.commands.update.DataLakeClient") as dl:
             mock_inst = dl.return_value
 
-            mock_inst.list_objects.return_value = [
-                {"Key": "file1.txt", "LastModified": datetime.now()},
-                {"Key": "file2.txt", "LastModified": datetime.now()},
-            ]
+            def gen():
+                yield [
+                    {"Key": "file1.txt", "LastModified": datetime.now()},
+                    {"Key": "file2.txt", "LastModified": datetime.now()},
+                ]
+
+            mock_inst.list_objects.return_value = gen()
 
             mock_inst.get_object.return_value = BytesIO(fake_image_sync_file)
 

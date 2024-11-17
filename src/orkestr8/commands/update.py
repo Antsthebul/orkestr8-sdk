@@ -106,11 +106,12 @@ class UpdateCommand(Command[UpdateArgs]):
                 files_on_server = file.readlines()
 
         files_to_add: List[bytes] = []
-        for record in cl.list_objects(prefix="data/images"):
-            file_name = record["Key"].encode()
+        for batch_records in cl.list_objects(prefix="data/images"):
+            for record in batch_records:
+                file_name = record["Key"].encode()
 
-            if file_name not in files_on_server:
-                files_to_add.append(file_name)
+                if file_name not in files_on_server:
+                    files_to_add.append(file_name)
 
         # Add files
         for file_name in files_to_add:
