@@ -44,11 +44,25 @@ class DataLakeClient:
         self.client.download_object(self.bucket, remote_file_path, dest_file_path)
 
     @contextmanager
-    def get_object_as_file(
-        self, remote_file_path: str, dest_file_path: str, f: BinaryIO
-    ):
-        """Retrieves an object from the remote bucket using the `obj_name` and
-        writes to `f`. This will set the file cursor to 0 and is ready to use."""
+    def get_object_as_file(self, remote_file_path: str):
+        """Retrieves an object from the remote bucket using the `obj_name`.
+        This will return a ready to use in-memory file-like object. File will
+        be closed when ctx manager exits"""
 
-        yield self.client.download_object_as_file(self.bucket, remote_file_path, f)
-        f.close()
+        try:
+            data = self.client.download_object_as_file(self.bucket, remote_file_path)
+            yield data
+        except Exception as e:
+            _log = f"Failed to download object: {str(e)}"
+            logger.warning(_log)
+            yield None
+        else:
+            data.close()
+
+    def list_objects(self, prefix=""):
+        """Generator to return all objects in a bucket"""
+        yield from self.client.list_objects(self.bucket, prefix=prefix)
+
+    def put_object(self, path: str, data: BinaryIO):
+        """Adds an object to the bucket while implmementing versioning"""
+        self.client.put_object(path, data)

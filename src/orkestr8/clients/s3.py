@@ -1,10 +1,10 @@
 import os
 from io import BytesIO
-from typing import BinaryIO
+from typing import BinaryIO, Generator
 
 import boto3  # type: ignore
 
-from .protocol import DatalakeProtocol
+from .protocol import DatalakeProtocol, Result
 
 
 class S3Client:
@@ -26,8 +26,23 @@ class S3Client:
     def download_object(self, bucket_name: str, obj_name, dest_file_path):
         self.client.download_file(bucket_name, obj_name, dest_file_path)
 
-    def download_object_as_file(self, bucket_name: str, obj_name: str, f: BinaryIO):
+    def download_object_as_file(self, bucket_name: str, obj_name: str) -> BinaryIO:
         data = BytesIO()
         self.client.download_fileobj(bucket_name, obj_name, data)
         data.seek(0)
         return data
+
+    def list_objects(
+        self, bucket_name: str, prefix="", continuation_token=None
+    ) -> Generator[Result, None, list]:
+        data = self.client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+        res = data["Contents"]
+        if not res:
+            return []
+        yield res
+        yield from self.list_objects(
+            bucket_name, prefix=prefix, continuation_token=res["NextContinuationToken"]
+        )
+
+    def put_object(self, bucket_name: str, path: str, data: BinaryIO) -> None:
+        self.client.put_object(Bucket=bucket_name, Body=data, Key=path)

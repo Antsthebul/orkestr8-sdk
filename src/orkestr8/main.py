@@ -11,7 +11,7 @@ from orkestr8.commands.train import TrainCommand
 from orkestr8.commands.update import UpdateCommand
 
 logger = logging.getLogger()
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s]:%(message)s")
 
 
 class Dispatch(Enum):
@@ -61,7 +61,7 @@ def run(args) -> None:
 
 def main():
     args = parse_args()
-    logger.info(args)
+    logger.debug(args)
     handle_env_vars(args)
     run(args)
 

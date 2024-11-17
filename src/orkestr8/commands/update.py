@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 from dataclasses import dataclass
+from io import BytesIO
 from pathlib import Path
 from uuid import uuid4
 
@@ -19,6 +20,7 @@ class UpdateArgs:
     remote_file_path: str
     dest_file_path: str
     default_yes: bool = False
+    sync_image_data: bool = True
 
 
 class UpdateCommand(Command[UpdateArgs]):
@@ -49,7 +51,9 @@ class UpdateCommand(Command[UpdateArgs]):
             )
 
     def run(self):
-        """Pulls down data from repo"""
+        """Pulls down updated testing library and training data from repo"""
+        # TODO: Due to imports, cannot be 'true' global env var
+        # need to make a settings file
         AWS_BUCKET_NAME = os.environ["AWS_BUCKET_NAME"]
         args = self.args
         remote_path, dest_path = args.remote_file_path, args.dest_file_path
@@ -81,3 +85,42 @@ class UpdateCommand(Command[UpdateArgs]):
                 shutil.rmtree(new_name, ignore_errors=True)
             logger.info("Successfully updated")
         install()
+        self.sync_image_data()
+
+    def sync_image_data(self):
+        """Pulls down all image data from repo. Maintains 'Key' directory
+         structure ie. foo/bar/.txt will exist in ~/foo/bar.txt. Updates the
+        state file containing all downloaded files if it exists, else creates it"""
+
+        logger.info("Starting image sync process")
+        AWS_BUCKET_NAME = os.environ["AWS_BUCKET_NAME"]
+        cl = DataLakeClient("s3", AWS_BUCKET_NAME)
+
+        source_of_truth = "training_data_on_server.txt"
+        complete_path = f"data/images/{source_of_truth}"
+
+        files_on_server = []
+        with cl.get_object_as_file(complete_path) as file:
+            if file:
+                files_on_server = file.readlines()
+
+        files_to_add: list[bytes] = []
+        for record in cl.list_objects(prefix="data/images"):
+            file_name = record["Key"].encode()
+
+            if file_name not in files_on_server:
+                files_to_add.append(file_name)
+
+        # Add files
+        for file_name in files_to_add:
+            parent_dirs = "".join(file_name.decode().split("/")[:-1])
+            os.makedirs(f"~/{parent_dirs}", exist_ok=True)
+            cl.get_object(file_name, f"~/{file_name}")
+
+        # Update sync file
+        with BytesIO() as s:
+            s.writelines(files_to_add + files_on_server)
+            s.seek(0)
+            cl.put_object(complete_path, s)
+
+        logger.info("Image data sync complete")
