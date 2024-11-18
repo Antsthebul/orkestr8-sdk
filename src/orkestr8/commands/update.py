@@ -116,7 +116,7 @@ class UpdateCommand(Command[UpdateArgs]):
         # Add files
         for file_name in files_to_add:
             file_name_str = file_name.decode()
-            parent_dirs = Path.home() / "".join(file_name_str.split("/")[:-1])
+            parent_dirs = Path.home() / Path(*(file_name_str.split("/")[:-1]))
             os.makedirs(str(parent_dirs), exist_ok=True)
             new_location = Path.home() / file_name_str
             cl.get_object(file_name_str, str(new_location))

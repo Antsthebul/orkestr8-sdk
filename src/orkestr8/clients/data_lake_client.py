@@ -40,7 +40,7 @@ class DataLakeClient:
     def get_object(self, remote_file_path: str, dest_file_path: str) -> None:
         """Retrieves an object from the remote bucket using the `obj_name` and
         saves this object to the `dest_file_path`"""
-        logger.info(f"Fetching '{remote_file_path}' from data lake")
+        logger.info(f"Transerfing '{remote_file_path}' to '{dest_file_path}'")
         self.client.download_object(self.bucket, remote_file_path, dest_file_path)
 
     @contextmanager
