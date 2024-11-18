@@ -116,16 +116,20 @@ class UpdateCommand(Command[UpdateArgs]):
         # Add files
         for file_name in files_to_add:
             file_name_str = file_name.decode()
-            parent_dirs = "".join(file_name_str.split("/")[:-1])
-            os.makedirs(f"~/{parent_dirs}", exist_ok=True)
-            logger.info(f"Downloading file: {file_name_str}")
-            cl.get_object(file_name_str, f"~/{file_name_str}")
-        logger.info("Image in repo have been sync'd to server")
+            parent_dirs = Path.home() / "".join(file_name_str.split("/")[:-1])
+            os.makedirs(str(parent_dirs), exist_ok=True)
+            new_location = Path.home() / file_name_str
+            cl.get_object(file_name_str, str(new_location))
+
+        logger.info("Images in repo have been sync'd to server")
         # Update sync file
-        with BytesIO() as s:
-            s.writelines(files_to_add + files_on_server)
-            s.seek(0)
-            logger.info("Pushing up new state data")
-            cl.put_object(complete_path, s)
+        if files_to_add:
+            with BytesIO() as s:
+                s.writelines(files_to_add + files_on_server)
+                s.seek(0)
+                logger.info("Pushing up new state data")
+                cl.put_object(complete_path, s)
+        else:
+            logger.info("Server is sync'd with repo. No new images to add at this time")
 
         logger.info("Image data sync complete")

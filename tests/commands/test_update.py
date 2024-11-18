@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from datetime import datetime
 from io import BytesIO
-from unittest.mock import patch
+from pathlib import Path
+from unittest.mock import call, patch
 
 from orkestr8.commands.update import UpdateArgs, UpdateCommand
 
@@ -44,11 +45,13 @@ class TestUpdateCommand:
         uc = UpdateCommand(args)
         with patch("orkestr8.commands.update.DataLakeClient") as dl:
             mock_inst = dl.return_value
+            file1 = "file1.txt"
+            file2 = "file2.txt"
 
             def gen():
                 yield [
-                    {"Key": "file1.txt", "LastModified": datetime.now()},
-                    {"Key": "file2.txt", "LastModified": datetime.now()},
+                    {"Key": file1, "LastModified": datetime.now()},
+                    {"Key": file2, "LastModified": datetime.now()},
                 ]
 
             mock_inst.list_objects.return_value = gen()
@@ -56,5 +59,11 @@ class TestUpdateCommand:
             mock_inst.get_object.return_value = BytesIO(fake_image_sync_file)
 
             uc.sync_image_data()
+
+            get_object_calls = mock_inst.get_object.call_args_list
+
+            assert len(get_object_calls) == 2
+            assert get_object_calls[0] == call(file1, str(Path.home() / file1))
+            assert get_object_calls[1] == call(file2, str(Path.home() / file2))
 
             mock_inst.put_object.assert_called_once()

@@ -48,5 +48,5 @@ class TestS3Client:
             Bucket=bucket_name, Prefix="", ContinuationToken="ABC"
         )
 
-    def test_get_obect(self):
+    def test_get_object(self):
         pass
