@@ -115,15 +115,17 @@ class UpdateCommand(Command[UpdateArgs]):
 
         # Add files
         for file_name in files_to_add:
-            parent_dirs = "".join(file_name.decode().split("/")[:-1])
+            file_name_str = file_name.decode()
+            parent_dirs = "".join(file_name_str.split("/")[:-1])
             os.makedirs(f"~/{parent_dirs}", exist_ok=True)
-            logger.info(f"Downloading {file_name}")
-            cl.get_object(file_name, f"~/{file_name}")
-
+            logger.info(f"Downloading file: {file_name_str}")
+            cl.get_object(file_name_str, f"~/{file_name_str}")
+        logger.info("Image in repo have been sync'd to server")
         # Update sync file
         with BytesIO() as s:
             s.writelines(files_to_add + files_on_server)
             s.seek(0)
+            logger.info("Pushing up new state data")
             cl.put_object(complete_path, s)
 
         logger.info("Image data sync complete")
