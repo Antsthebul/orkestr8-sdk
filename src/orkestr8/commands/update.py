@@ -125,7 +125,8 @@ class UpdateCommand(Command[UpdateArgs]):
         # Update sync file
         if files_to_add:
             with BytesIO() as s:
-                s.writelines(files_to_add + files_on_server)
+                for l in files_to_add + files_on_server:
+                    s.write(l + b"\n")
                 s.seek(0)
                 logger.info("Pushing up new state data")
                 cl.put_object(complete_path, s)

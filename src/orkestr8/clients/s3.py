@@ -24,7 +24,6 @@ class S3Client:
         )
 
     def download_object(self, bucket_name: str, obj_name, dest_file_path):
-        print("dest file path", dest_file_path)
         self.client.download_file(bucket_name, obj_name, dest_file_path)
 
     def download_object_as_file(self, bucket_name: str, obj_name: str) -> BinaryIO:
