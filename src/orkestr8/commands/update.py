@@ -98,7 +98,7 @@ class UpdateCommand(Command[UpdateArgs]):
     def build_classes():
         classes = []
         for name in os.listdir(str(Path.home() / "data/images")):
-            if not "." in name:
+            if "." in name:
                 continue
             classes.append(name)
         classes_file = str(Path.home() / "data/images/classes.txt")
