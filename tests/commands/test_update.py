@@ -15,12 +15,19 @@ class Args:
 
 
 class TestUpdateCommand:
+    @patch("orkestr8.commands.update.UpdateCommand.build_classes", return_value=None)
     @patch("orkestr8.commands.update.importlib.import_module")
     @patch("orkestr8.commands.update.UpdateCommand.sync_image_data", return_value=None)
     @patch("orkestr8.commands.update.install", return_value=None)
     @patch("orkestr8.commands.update.DataLakeClient.get_object", return_value=None)
     def test_run_command_fetches_object_from_remote(
-        self, mock_get_object, mock_install, mock_sync_image_data, tmp_path
+        self,
+        mock_get_object,
+        mock_install,
+        mock_sync_image_data,
+        mock_import_module,
+        mock_build_classes,
+        tmp_path,
     ):
         remote_path = "path"
         args = Args(

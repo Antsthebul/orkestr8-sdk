@@ -23,6 +23,7 @@ class UpdateArgs:
     dest_file_path: str
     default_yes: bool = False
     sync_image_data: bool = True
+    generate_new_train_test: bool = False
 
 
 class UpdateCommand(Command[UpdateArgs]):
@@ -87,15 +88,29 @@ class UpdateCommand(Command[UpdateArgs]):
                 shutil.rmtree(new_name, ignore_errors=True)
             logger.info("Successfully updated")
         install()
-        self.sync_image_data()
-        # TODO: Make check here so this is not always run
-        m = importlib.import_module("utils")
-        m.split_dump_dataset()
+        updated = self.sync_image_data()
+        if updated or self.args.generate_new_train_test:
+            m = importlib.import_module("utils")
+            m.split_dump_dataset()
+        self.build_classes()
 
-    def sync_image_data(self) -> None:
+    @staticmethod
+    def build_classes():
+        classes = []
+        for name in os.listdir(str(Path.home() / "data/images")):
+            if not "." in name:
+                continue
+            classes.append(name)
+        classes_file = str(Path.home() / "data/images/classes.txt")
+        with open(classes_file, "w") as f:
+            for c in classes:
+                f.write(c + "\n")
+
+    def sync_image_data(self) -> bool:
         """Pulls down all image data from repo. Maintains 'Key' directory
          structure ie. foo/bar/.txt will exist in ~/foo/bar.txt. Updates the
-        state file containing all downloaded files if it exists, else creates it"""
+        state file containing all downloaded files if it exists, else creates it.
+        :returns: Return True if image_data was synced"""
 
         logger.info("Starting image sync process")
         AWS_BUCKET_NAME = os.environ["AWS_BUCKET_NAME"]
@@ -138,6 +153,7 @@ class UpdateCommand(Command[UpdateArgs]):
             logger.info("Server is sync'd with repo. No new images to add at this time")
 
         logger.info("Image data sync complete")
+        return bool(files_to_add)
 
 
 # TODO: It MAY just be better to agree on 1 file type
