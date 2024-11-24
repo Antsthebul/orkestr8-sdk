@@ -67,6 +67,11 @@ def parse_args():
     update_parser.add_argument(
         "dest_file_path", help="Where to direct Orkestr8 to write file path"
     )
+    update_parser.add_argument(
+        "generate_new_train_test",
+        help="Generates new training and validation data. This is automatic"
+        " if image data is add to the server",
+    )
 
     # ArgumentParser("stop", description="Writes to a file", parents=[parser])
     return parser.parse_args()

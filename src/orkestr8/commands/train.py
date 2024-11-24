@@ -8,7 +8,9 @@ from .base import Command
 
 
 def _get_pid_save_location() -> Path:
-    return Path("~/runs")
+    base_runs_dir = Path("~/runs")
+    os.makedirs(str(base_runs_dir), exist_ok=True)
+    return base_runs_dir
 
 
 @dataclass
