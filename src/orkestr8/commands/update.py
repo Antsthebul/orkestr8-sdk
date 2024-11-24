@@ -88,6 +88,7 @@ class UpdateCommand(Command[UpdateArgs]):
             logger.info("Successfully updated")
         install()
         self.sync_image_data()
+        # TODO: Make check here so this is not always run
         m = importlib.import_module("utils")
         m.split_dump_dataset()
 
