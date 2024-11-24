@@ -1,3 +1,4 @@
+import importlib
 import logging
 import os
 import shutil
@@ -87,6 +88,8 @@ class UpdateCommand(Command[UpdateArgs]):
             logger.info("Successfully updated")
         install()
         self.sync_image_data()
+        m = importlib.import_module("utils")
+        m.split_dump_dataset()
 
     def sync_image_data(self) -> None:
         """Pulls down all image data from repo. Maintains 'Key' directory
@@ -103,14 +106,14 @@ class UpdateCommand(Command[UpdateArgs]):
         files_on_server = []
         with cl.get_object_as_file(complete_path) as file:
             if file:
-                files_on_server = file.readlines()
+                files_on_server = [l.strip() for l in file.readlines()]
 
         files_to_add: List[bytes] = []
         for batch_records in cl.list_objects(prefix="data/images"):
             for record in batch_records:
                 file_name = record["Key"].encode()
 
-                if file_name not in files_on_server:
+                if file_name not in files_on_server and is_image_file(file_name):
                     files_to_add.append(file_name)
 
         # Add files
@@ -122,7 +125,7 @@ class UpdateCommand(Command[UpdateArgs]):
             cl.get_object(file_name_str, str(new_location))
 
         logger.info("Images in repo have been sync'd to server")
-        # Update sync file
+        # Update sync file in remote repo
         if files_to_add:
             with BytesIO() as s:
                 for l in files_to_add + files_on_server:
@@ -134,3 +137,10 @@ class UpdateCommand(Command[UpdateArgs]):
             logger.info("Server is sync'd with repo. No new images to add at this time")
 
         logger.info("Image data sync complete")
+
+
+# TODO: It MAY just be better to agree on 1 file type
+def is_image_file(file_name: bytes) -> bool:
+    """Checks to see if the file type is the accepted"""
+    image_types = [b".jpg", b".jpeg"]
+    return any(file_name.endswith(it) for it in image_types)

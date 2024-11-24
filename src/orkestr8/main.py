@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from enum import Enum
 from typing import List
 
@@ -46,6 +47,10 @@ def check_env_variables(args):
 
 
 def run(args) -> None:
+    # TODO: This could be dynamic. Ensure
+    # Underlying package is in system path
+    sys.path.append(os.getcwd() + "/foodenie_ml")
+
     commands_to_run: List[Command] = []
     command = Dispatch(args.command)
     if command == Dispatch.TRAIN:
