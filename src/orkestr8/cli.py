@@ -104,5 +104,14 @@ def parse_args():
     )
     download_model_parser.add_argument("--model-location", help="Location of .pth file")
 
-    subparsers.add_parser("check", help="Checks running state of training session")
+    check_parser = subparsers.add_parser(
+        "check", help="Checks running state of training session"
+    )
+    check_parser.add_argument(
+        "--file",
+        help=(
+            "File which contains process information. If file can be accessed AND has PID value"
+            + ", will return ACTIVE, else INACTIVE for all other scenarios"
+        ),
+    )
     return parser.parse_args()
