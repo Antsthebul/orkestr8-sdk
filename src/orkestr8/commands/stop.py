@@ -28,11 +28,11 @@ class StopCommand(Command[StopArgs]):
         with open(get_pid_save_location()) as f:
             pid = f.read().split(":")[-1].strip()
         if pid:
+            os.remove(get_pid_save_location())
             os.kill(int(pid), signal.SIGTERM)
             for _ in range(10):  # Check up to 10 times
                 if not os.path.exists(f"/proc/{pid}"):
-                    print(f"Process {pid} has terminated.")
-                    LOGGER.info("Shutdown completed successfully")
+                    LOGGER.info(f"Process {pid} has terminated.")
                     break
                 time.sleep(1)
             else:
