@@ -27,13 +27,15 @@ class StopCommand(Command[StopArgs]):
         LOGGER.info("Shutdown command invoked")
         with open(get_pid_save_location()) as f:
             pid = f.read().split(":")[-1].strip()
-
-        os.kill(pid, signal.SIGTERM)
-        for _ in range(10):  # Check up to 10 times
-            if not os.path.exists(f"/proc/{pid}"):
-                print(f"Process {pid} has terminated.")
-                LOGGER.info("Shutdown completed successfully")
-                break
-            time.sleep(1)
+        if pid:
+            os.kill(int(pid), signal.SIGTERM)
+            for _ in range(10):  # Check up to 10 times
+                if not os.path.exists(f"/proc/{pid}"):
+                    print(f"Process {pid} has terminated.")
+                    LOGGER.info("Shutdown completed successfully")
+                    break
+                time.sleep(1)
+            else:
+                LOGGER.error("Failed to shut down process")
         else:
-            LOGGER.error("Failed to shut down process")
+            LOGGER.info("No python process running")
