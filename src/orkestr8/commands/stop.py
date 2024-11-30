@@ -10,6 +10,7 @@ from orkestr8.utils import get_pid_save_location
 from .base import Command
 
 LOGGER = logging.getLogger()
+logging.basicConfig(level=logging.INFO)
 
 
 @dataclass
@@ -31,6 +32,8 @@ class StopCommand(Command[StopArgs]):
         for _ in range(10):  # Check up to 10 times
             if not os.path.exists(f"/proc/{pid}"):
                 print(f"Process {pid} has terminated.")
+                LOGGER.info("Shutdown completed successfully")
                 break
             time.sleep(1)
-        LOGGER.info("Shutdown completed successfully")
+        else:
+            LOGGER.error("Failed to shut down process")
