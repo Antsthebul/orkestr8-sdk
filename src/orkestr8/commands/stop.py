@@ -29,6 +29,7 @@ class StopCommand(Command[StopArgs]):
             pid = f.read().split(":")[-1].strip()
         if pid:
             os.remove(get_pid_save_location())
+            time.sleep(0.5)  # gives time for deletion
             os.kill(int(pid), signal.SIGTERM)
             for _ in range(10):  # Check up to 10 times
                 if not os.path.exists(f"/proc/{pid}"):
