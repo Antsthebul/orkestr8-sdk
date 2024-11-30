@@ -2,15 +2,10 @@ import importlib
 import os
 from dataclasses import dataclass
 from multiprocessing import Process
-from pathlib import Path
+
+from orkestr8.utils import get_pid_save_location
 
 from .base import Command
-
-
-def _get_pid_save_location() -> Path:
-    base_runs_dir = Path("~/runs")
-    os.makedirs(str(base_runs_dir), exist_ok=True)
-    return base_runs_dir
 
 
 @dataclass
@@ -26,7 +21,7 @@ class TrainCommand(Command[TrainArgs]):
     def _run(self):
         m = importlib.import_module(self.args.model_module)
         child_id = os.getpid()
-        with open(str(_get_pid_save_location() / "run_id.txt"), "w") as f:
+        with open(str(get_pid_save_location()), "w") as f:
             f.write(f"PID: {child_id}")
         m.train()
 

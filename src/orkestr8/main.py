@@ -2,12 +2,15 @@ import logging
 import os
 import sys
 from enum import Enum
-from typing import List
+from typing import Dict, List, Type
 
 import dotenv
 
 from orkestr8.cli import parse_args
 from orkestr8.commands.base import Command
+from orkestr8.commands.check import CheckCommand
+from orkestr8.commands.download_model import DownloadModelCommand
+from orkestr8.commands.stop import StopCommand
 from orkestr8.commands.train import TrainCommand
 from orkestr8.commands.update import UpdateCommand
 
@@ -19,7 +22,20 @@ class Dispatch(Enum):
     TRAIN = "train"
     RUN = "run"
     UPDATE = "update"
+    STOP = "stop"
+    DOWNLOAD_MODEL = "download_model"
+    CHECK = "check"
 
+
+# Order of commands only matters in list, if multiple are provided
+DISPATCH_MAP: Dict[Dispatch, List[Type[Command]]] = {
+    Dispatch.TRAIN: [TrainCommand],
+    Dispatch.RUN: [UpdateCommand, TrainCommand],
+    Dispatch.UPDATE: [UpdateCommand],
+    Dispatch.STOP: [StopCommand],
+    Dispatch.DOWNLOAD_MODEL: [DownloadModelCommand],
+    Dispatch.CHECK: [CheckCommand],
+}
 
 dotenv.load_dotenv()
 
@@ -51,16 +67,12 @@ def run(args) -> None:
     # Underlying package is in system path
     sys.path.append(os.getcwd() + "/foodenie_ml")
 
-    commands_to_run: List[Command] = []
+    commands_to_run: List[Type[Command]] = []
     command = Dispatch(args.command)
-    if command == Dispatch.TRAIN:
-        commands_to_run.append(TrainCommand(args))
-    elif command == Dispatch.UPDATE:
-        commands_to_run.append(UpdateCommand(args))
-    elif command == Dispatch.RUN:
-        commands_to_run.append(UpdateCommand(args))
-        commands_to_run.append(TrainCommand(args))
-    for c in commands_to_run:
+    commands_to_run = DISPATCH_MAP[command]
+
+    for command_cls in commands_to_run:
+        c = command_cls(args)
         c.run()
 
 
