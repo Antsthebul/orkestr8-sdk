@@ -41,13 +41,7 @@ dotenv.load_dotenv()
 
 
 def handle_env_vars(args):
-    assign_env_variables(args)
     check_env_variables(args)
-
-
-def assign_env_variables(args):
-    os.environ["DEST_FILE_PATH"] = args.dest_file_path
-    os.environ["REMOTE_FILE_PATH"] = args.remote_file_path
 
 
 def check_env_variables(args):
