@@ -44,15 +44,15 @@ def handle_env_vars(args):
     check_env_variables(args)
 
 
+# TODO: ELminate this method
+# some commands dont require this
 def check_env_variables(args):
     required_variables = ["AWS_ACCESS_KEY", "AWS_SECRET_KEY", "AWS_BUCKET_NAME"]
 
     for v in required_variables:
         if not os.environ.get(v):
             attr = getattr(args, v.lower(), None)
-            if attr is None:
-                raise RuntimeError(f"Improper configuration. '{v}' is not set")
-            else:
+            if attr:
                 os.environ[v] = attr
 
 
