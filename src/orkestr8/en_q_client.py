@@ -8,21 +8,25 @@ RUN STATES:
 import socket
 import time
 
+from .utils import TrainingData
+
 
 def poll():
     sock = socket.socket()
     sock.connect(("localhost", 8000))
     sock.setblocking(False)
-    data = None
+    data = ""
     x = 1
     while x < 5:
         x += 1
         try:
             data = sock.recv(1024)
-        except BlockingIOError as e:
+        except BlockingIOError:
             pass
-
+        else:
+            if data:
+                data = TrainingData.parse(data)
+                sock.close()
+                break
         time.sleep(0.5)
-    print(" polled => ", data)
-    sock.close()
     return data

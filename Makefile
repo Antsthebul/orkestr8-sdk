@@ -1,7 +1,7 @@
 .PHONY: all
 
 test:
-	pytest -vs
+	pytest -vvs
 
 lint:
 	mypy src/

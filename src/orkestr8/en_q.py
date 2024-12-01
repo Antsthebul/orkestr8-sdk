@@ -54,7 +54,7 @@ def start() -> None:
             try:
                 data: str = q.get_nowait()
             except queue.Empty:
-                data = "EMPTY"
+                data = ""
             conn.sendall(data.encode())
     except KeyboardInterrupt:
         print("shutting down")

@@ -1,7 +1,30 @@
 import os
+import re
 from pathlib import Path
+from typing import TypedDict, cast
 
 from .settings import DATA_OUTPUT_FILE_LOCATION, PID_FILE_LOCATION
+
+
+class TrainingData(TypedDict):
+    epoch: int
+    train_acc: str
+    test_acc: str
+    time: str
+    train_loss: float
+    val_loss: float
+    dir_name: str
+
+
+def build_training_data_response(text: str) -> TrainingData:
+    result = {}
+    for rk, annotate in TrainingData.__annotations__.items():
+        data = re.search(rf"{rk}=([\"a-z\d\._\'%]+)\s*,?", text, flags=re.I)
+        if data:
+            result[rk] = annotate(data.group(1))
+        else:
+            raise Exception(f"All args must be defined. Missing in training data {rk}")
+    return cast(TrainingData, result)
 
 
 def get_pid_save_location() -> Path:
