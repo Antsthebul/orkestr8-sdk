@@ -23,8 +23,8 @@ def file_worker(q: queue.Queue):
             updated_epoch = None
             if lines := f.readlines():
                 data = lines[-1]
-                if match := re.search(r"\[data-row\]", data, flags=re.I):
-                    updated_epoch = match.group()
+                if re.search(r"\[data-row\]", data, flags=re.I):
+                    updated_epoch = data
         if updated_epoch and last_epoch != updated_epoch:
             q.put(updated_epoch)
             last_epoch = updated_epoch
