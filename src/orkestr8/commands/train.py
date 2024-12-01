@@ -21,7 +21,7 @@ class TrainCommand(Command[TrainArgs]):
     def _run(self):
         m = importlib.import_module(self.args.model_module)
         child_id = os.getpid()
-        with open(str(get_pid_save_location()), "w") as f:
+        with open(get_pid_save_location(), "w") as f:
             f.write(f"PID: {child_id}")
         m.train()
 
