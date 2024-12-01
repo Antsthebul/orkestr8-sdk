@@ -5,6 +5,7 @@ log aggregator
 """
 import logging
 import queue
+import re
 import socket
 import sys
 import threading
@@ -21,9 +22,10 @@ def file_worker(q: queue.Queue):
         with open(get_data_output_file()) as f:
             updated_epoch = None
             if lines := f.readlines():
-                updated_epoch = lines[-1]
-
-        if last_epoch != updated_epoch:
+                data = lines[-1]
+                if match := re.search(r"\[data-row\]", data, flags=re.I):
+                    updated_epoch = match.group()
+        if updated_epoch and last_epoch != updated_epoch:
             q.put(updated_epoch)
             last_epoch = updated_epoch
 
