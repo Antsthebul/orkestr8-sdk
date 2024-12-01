@@ -10,7 +10,6 @@ from orkestr8.utils import get_pid_save_location
 from .base import Command
 
 LOGGER = logging.getLogger()
-logging.basicConfig(level=logging.INFO)
 
 
 @dataclass

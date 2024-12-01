@@ -1,3 +1,4 @@
+import logging
 import os
 from dataclasses import dataclass
 from enum import Enum
@@ -5,6 +6,8 @@ from enum import Enum
 from orkestr8.clients.data_lake_client import ClientType, DataLakeClient
 
 from .base import Command
+
+LOGGER = logging.getLogger()
 
 
 class Destination(Enum):
@@ -23,7 +26,7 @@ class DownloadModelCommand(Command[DownloadModelArgs]):
     @staticmethod
     def parse(args) -> DownloadModelArgs:
         return DownloadModelArgs(
-            source=args.source, to=args.to, destination=args.destination
+            source=args.model_location, to=args.to, destination=args.remote_location
         )
 
     def run(self):
@@ -33,3 +36,4 @@ class DownloadModelCommand(Command[DownloadModelArgs]):
 
             with open(self.args.source, "rb") as d:
                 cl.put_object(self.args.destination, d)
+        LOGGER.info("Model transfer completed successfully")

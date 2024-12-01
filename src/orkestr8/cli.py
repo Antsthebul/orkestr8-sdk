@@ -102,8 +102,14 @@ def parse_args():
     download_model_parser.add_argument(
         "to", help="Location to save the model", choices=Destination._member_names_
     )
-    download_model_parser.add_argument("--model-location", help="Location of .pth file")
-
+    download_model_parser.add_argument(
+        "--model-location", help="Location of .pth file", required=True
+    )
+    download_model_parser.add_argument(
+        "--remote-location",
+        help="File path to place model of 'to' argument",
+        required=True,
+    )
     check_parser = subparsers.add_parser(
         "check", help="Checks running state of training session"
     )
