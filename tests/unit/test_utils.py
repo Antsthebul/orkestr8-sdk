@@ -19,7 +19,7 @@ class TestUtils:
         )
 
         # ACT
-        result = build_training_data_response(text)
+        result = build_training_data_response(text.encode())
 
         assert {
             "epoch": 1,

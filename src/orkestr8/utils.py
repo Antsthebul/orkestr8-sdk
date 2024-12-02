@@ -16,10 +16,10 @@ class TrainingData(TypedDict):
     dir_name: str
 
 
-def build_training_data_response(text: str) -> TrainingData:
+def build_training_data_response(text: bytes) -> TrainingData:
     result = {}
     for rk, annotate in TrainingData.__annotations__.items():
-        data = re.search(rf"{rk}=([\"a-z\d\._\'%]+)\s*,?", text, flags=re.I)
+        data = re.search(rf"{rk}=([\"a-z\d\._\'%]+)\s*,?", text.decode(), flags=re.I)
         if data:
             result[rk] = annotate(data.group(1))
         else:
