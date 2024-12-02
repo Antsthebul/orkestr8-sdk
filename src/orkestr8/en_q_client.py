@@ -8,8 +8,6 @@ RUN STATES:
 import socket
 import time
 
-from .utils import build_training_data_response
-
 
 def poll():
     sock = socket.socket()
@@ -25,7 +23,6 @@ def poll():
             pass
         else:
             if data:
-                data = build_training_data_response(data)
                 sock.close()
                 break
         time.sleep(0.5)
