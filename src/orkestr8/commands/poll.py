@@ -17,4 +17,4 @@ class PollCommand(Command[PollArgs]):
     def run(self):
         data = poll()
         # send to output stream
-        print({"data": data})
+        print(data)
