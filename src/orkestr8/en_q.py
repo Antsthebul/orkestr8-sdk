@@ -4,14 +4,16 @@ running process. Could be described loosely as a
 log aggregator
 """
 import logging
+import os
 import queue
 import re
 import socket
 import sys
 import threading
 import time
+from multiprocessing import Process
 
-from .utils import get_data_output_file
+from .utils import get_data_output_file, get_queue_pid_file
 
 logger = logging.getLogger()
 
@@ -33,6 +35,18 @@ def file_worker(q: queue.Queue):
 
 
 def start() -> None:
+    """Kicks off process"""
+    p = Process(target=_start)
+    p.start()
+
+
+def _start() -> None:
+    """Worker code to invoke"""
+
+    with open(get_queue_pid_file(), "w") as f:
+        pid = os.getpid()
+        f.write(f"PID: {pid}")
+
     q: queue.Queue[str] = queue.Queue()
     t = threading.Thread(target=file_worker, args=(q,))
     t.daemon = True

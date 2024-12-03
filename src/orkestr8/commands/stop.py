@@ -1,15 +1,36 @@
 import logging
 import os
-import signal
 import time
 from dataclasses import dataclass
-from typing import Union
+from typing import Callable, Dict, Union
 
-from orkestr8.utils import get_pid_save_location
+from orkestr8.utils import get_pid_save_location, get_queue_pid_file
 
 from .base import Command
 
+PROCESSES: Dict[str, Callable] = {
+    "TRAINING_PROCESS": get_pid_save_location,
+    "QUEUE_PROCESS": get_queue_pid_file,
+}
+
 LOGGER = logging.getLogger()
+
+
+def _shut_down_processes() -> None:
+    """Fetches PIDs from their saved file
+    location and kills processes"""
+    for process_name, file_fn in PROCESSES.items():
+        with open(file_fn()) as f:
+            pid = f.read().split(":")[-1].strip()
+        if pid:
+            os.remove(file_fn())
+            for _ in range(10):
+                if not os.path.exists(f"/proc/{pid}"):
+                    LOGGER.info(
+                        f"Process {pid} has terminated. '{process_name}' has stopped"
+                    )
+                    break
+                time.sleep(1)
 
 
 @dataclass
@@ -24,18 +45,5 @@ class StopCommand(Command[StopArgs]):
 
     def run(self):
         LOGGER.info("Shutdown command invoked")
-        with open(get_pid_save_location()) as f:
-            pid = f.read().split(":")[-1].strip()
-        if pid:
-            os.remove(get_pid_save_location())
-            time.sleep(0.5)  # gives time for deletion
-            os.kill(int(pid), signal.SIGTERM)
-            for _ in range(10):  # Check up to 10 times
-                if not os.path.exists(f"/proc/{pid}"):
-                    LOGGER.info(f"Process {pid} has terminated.")
-                    break
-                time.sleep(1)
-            else:
-                LOGGER.error("Failed to shut down process")
-        else:
-            LOGGER.info("No python process running")
+        _shut_down_processes()
+        LOGGER.info("Process shutdown complete")
