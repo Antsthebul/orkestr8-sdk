@@ -120,4 +120,5 @@ def parse_args():
             + ", will return ACTIVE, else INACTIVE for all other scenarios"
         ),
     )
+    subparsers.add_parser("mock_run", help="Invokes a false training scenario")
     return parser.parse_args()

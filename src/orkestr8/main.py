@@ -12,6 +12,7 @@ from orkestr8.commands.check import CheckCommand
 from orkestr8.commands.download_model import DownloadModelCommand
 from orkestr8.commands.poll import PollCommand
 from orkestr8.commands.stop import StopCommand
+from orkestr8.commands.test import TestCommand
 from orkestr8.commands.train import TrainCommand
 from orkestr8.commands.update import UpdateCommand
 
@@ -27,6 +28,7 @@ class Dispatch(Enum):
     DOWNLOAD_MODEL = "download_model"
     CHECK = "check"
     POLL = "poll"
+    MOCK_RUN = "mock_run"
 
 
 # Order of commands only matters in list, if multiple are provided
@@ -38,6 +40,7 @@ DISPATCH_MAP: Dict[Dispatch, List[Type[Command]]] = {
     Dispatch.DOWNLOAD_MODEL: [DownloadModelCommand],
     Dispatch.CHECK: [CheckCommand],
     Dispatch.POLL: [PollCommand],
+    Dispatch.MOCK_RUN: [TestCommand],
 }
 
 dotenv.load_dotenv()
