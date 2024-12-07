@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from .base import Command
 
 
@@ -12,6 +14,7 @@ class TestCommand(Command[TestArg]):
 
     def run(self):
         with open("main.py", "w") as server_script:
-            with open("test_script.py") as f:
+            current_loc = Path(__file__).parent.parent
+            with open(current_loc / "test_script.py") as f:
                 data = f.read()
             server_script.write(data)
