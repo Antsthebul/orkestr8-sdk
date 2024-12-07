@@ -18,4 +18,5 @@ def train():
             + f"test_acc={accuracy_hist_valid*100:.2f}%, time={end:.2f}sec, "
             + f"train_loss={loss_hist_train:.4f}, val_loss={loss_hist_valid:.4f}, {dir_name=}"
         )
+        print(_log)
         epoch += 1
