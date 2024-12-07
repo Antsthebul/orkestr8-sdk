@@ -40,7 +40,7 @@ DISPATCH_MAP: Dict[Dispatch, List[Type[Command]]] = {
     Dispatch.DOWNLOAD_MODEL: [DownloadModelCommand],
     Dispatch.CHECK: [CheckCommand],
     Dispatch.POLL: [PollCommand],
-    Dispatch.MOCK_RUN: [TestCommand],
+    Dispatch.MOCK_RUN: [TestCommand, TrainCommand],
 }
 
 dotenv.load_dotenv()

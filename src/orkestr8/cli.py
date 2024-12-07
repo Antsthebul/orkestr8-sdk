@@ -54,7 +54,7 @@ def parse_args():
     train_parser.add_argument(
         "model_module",
         action="store",
-        help="The module that contains the model to run. Module MUST have a `run` method defined",
+        help="The module that contains the model to run. Module MUST have a `train` method defined",
     )
 
     run_parser = subparsers.add_parser(
@@ -65,7 +65,7 @@ def parse_args():
     run_parser.add_argument(
         "--model-module",
         action="store",
-        help="The module that contains the model to run. Module MUST have a `run` method defined",
+        help="The module that contains the model to run. Module MUST have a `train` method defined",
     )
     run_parser.add_argument(
         "--remote_file_path", help="Where to direct Orkestr8 to pull the file from"
@@ -120,5 +120,8 @@ def parse_args():
             + ", will return ACTIVE, else INACTIVE for all other scenarios"
         ),
     )
-    subparsers.add_parser("mock_run", help="Invokes a false training scenario")
+    mock_run_parser = subparsers.add_parser(
+        "mock_run", help="Invokes a false training scenario"
+    )
+    mock_run_parser.add_argument("--model-module", default="orkestr8_mock")
     return parser.parse_args()
