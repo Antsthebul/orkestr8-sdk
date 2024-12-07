@@ -65,7 +65,7 @@ def check_env_variables(args):
 def run(args) -> None:
     # TODO: This could be dynamic. Ensure
     # Underlying package is in system path
-    sys.path.append(os.getcwd() + "/foodenie_ml")
+    sys.path.extend([os.getcwd(), os.getcwd() + "/foodenie_ml"])
 
     commands_to_run: List[Type[Command]] = []
     command = Dispatch(args.command)
