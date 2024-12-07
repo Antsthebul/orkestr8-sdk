@@ -1,5 +1,13 @@
+"""
+DO NOT IMPORT ANYTHING OTHER THAN BUIL-INS IN THIS FILE.
+THIS COPIED AND RUN AS A STANDALONE SCRIPT
+"""
+import logging
 import random
 import time
+
+LOGGER = logging.getLogger()
+logging.basicConfig(level=logging.INFO)
 
 
 def train():
@@ -18,5 +26,5 @@ def train():
             + f"test_acc={accuracy_hist_valid*100:.2f}%, time={end:.2f}sec, "
             + f"train_loss={loss_hist_train:.4f}, val_loss={loss_hist_valid:.4f}, {dir_name=}"
         )
-        print(_log)
+        LOGGER.info(_log)
         epoch += 1
