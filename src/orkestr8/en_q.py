@@ -55,7 +55,7 @@ def _start() -> None:
     sock = socket.socket()
     sock.settimeout(1)
     # TODO: MAKE DYNAMIC
-    sock.bind(("localhost", 8000))
+    sock.bind(("localhost", 8100))
     sock.listen()
 
     try:

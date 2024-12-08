@@ -11,7 +11,7 @@ import time
 
 def poll():
     sock = socket.socket()
-    sock.connect(("localhost", 8000))
+    sock.connect(("localhost", 8100))
     sock.setblocking(False)
     data = ""
     x = 1

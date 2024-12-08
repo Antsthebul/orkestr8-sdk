@@ -18,8 +18,8 @@ def train():
         accuracy_hist_train = random.randint(0, 100) / 100
         accuracy_hist_valid = random.randint(0, 100) / 100
         end = sleep_time
-        loss_hist_train = random.choice(range(1, 2, 0.01))
-        loss_hist_valid = random.choice(range(1, 2, 0.01))
+        loss_hist_train = random.randint(range(1, 10)) / 100
+        loss_hist_valid = random.randint(range(1, 10)) / 100
         dir_name = "test"
         _log = (
             f"[Data-row] {epoch=}, train_acc={accuracy_hist_train*100:.2f}%, "
