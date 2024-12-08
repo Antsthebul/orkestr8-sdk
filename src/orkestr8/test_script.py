@@ -3,11 +3,28 @@ DO NOT IMPORT ANYTHING OTHER THAN BUIL-INS IN THIS FILE.
 THIS COPIED AND RUN AS A STANDALONE SCRIPT
 """
 import logging
+import logging.config
 import random
 import time
 
+CONFIG = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "stream": "ext://sys.stdout",
+        },
+    },
+    "loggers": {
+        "": {"level": "INFO", "handlers": ["console"]},
+    },
+}
+
+
+logging.config.dictConfig(CONFIG)
 LOGGER = logging.getLogger()
-logging.basicConfig(level=logging.INFO)
 
 
 def train():
@@ -18,8 +35,8 @@ def train():
         accuracy_hist_train = random.randint(0, 100) / 100
         accuracy_hist_valid = random.randint(0, 100) / 100
         end = sleep_time
-        loss_hist_train = random.randint(range(1, 10)) / 100
-        loss_hist_valid = random.randint(range(1, 10)) / 100
+        loss_hist_train = random.randint(1, 10) / 100
+        loss_hist_valid = random.randint(1, 10) / 100
         dir_name = "test"
         _log = (
             f"[Data-row] {epoch=}, train_acc={accuracy_hist_train*100:.2f}%, "
