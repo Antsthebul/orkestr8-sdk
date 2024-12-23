@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 DATA_OUTPUT_FILE = "data.txt"
@@ -13,4 +14,5 @@ LOG_OUTPUT_FILE_LOCATION = BASE_PATH / ".orkestr8" / "service.log"
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s")
 logger = logging.getLogger()
+os.makedirs(str(LOG_OUTPUT_FILE_LOCATION.parent), exist_ok=True)
 logger.addHandler(logging.FileHandler(LOG_OUTPUT_FILE_LOCATION))
