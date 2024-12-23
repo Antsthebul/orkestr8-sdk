@@ -4,5 +4,6 @@ Python SDK to simplify resource accumulation and model training. This SDK is use
 
 ## Testing
 
+The venv needs to be manually invoked. Poetry is only used as a dep resolver
 1. `venv/scripts/activate`: Active local venv
 2. `make test`

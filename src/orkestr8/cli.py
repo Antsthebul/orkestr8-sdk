@@ -121,7 +121,7 @@ def parse_args():
         ),
     )
     mock_run_parser = subparsers.add_parser(
-        "mock_run", help="Invokes a false training scenario"
+        "mock_run", help="Invokes a mocked training scenario"
     )
     mock_run_parser.add_argument("--model-module", default="orkestr8_mock")
     return parser.parse_args()

@@ -9,20 +9,40 @@ logger = logging.getLogger()
 
 
 def install():
-    with open("log.txt", "w") as f:
-        logger.info("Installing foodenie_ml..")
-        try:
-            subprocess.run(["tar -xvzf foodenie_ml.tar.gz"], shell=True, stdout=f)
-            subprocess.run(
-                [
-                    "cd foodenie_ml && python3 -m pip install -r requirements/prod.txt && rm ../foodenie_ml.tar.gz"
-                ],
-                shell=True,
-                stdout=f,
-            )
-        except Exception as e:
-            logger.error(
-                f"Encountered installation error. {type(e).__name__:str(e)}.\nExiting..."
-            )
-            sys.exit(1)
-    logger.info("Application install successfully. Existing installation script\n")
+    complete_log = None
+
+    start_log = "Installing foodenie_ml.."
+    logger.info(start_log)
+    try:
+        res = subprocess.run(
+            ["tar -xvzf foodenie_ml.tar.gz"],
+            shell=True,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+        logger.info(res.stdout)
+        res = subprocess.run(
+            [
+                "cd foodenie_ml && python3 -m pip install -r requirements/prod.txt && rm ../foodenie_ml.tar.gz"
+            ],
+            shell=True,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+        logger.info(res.stdout)
+    except Exception as e:
+        error_log = (
+            f"Encountered installation error. {type(e).__name__:str(e)}.\nExiting...\n"
+        )
+        logger.error(error_log)
+    else:
+        complete_log = (
+            "Application install successfully. Existing installation script\n"
+        )
+        logger.info(complete_log)
+
+    if complete_log is None:
+        # We want the ENTIRE process to stop so exit the program completely
+        sys.exit(1)

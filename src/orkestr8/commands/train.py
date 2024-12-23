@@ -1,4 +1,5 @@
 import importlib
+import logging
 import os
 from dataclasses import dataclass
 from multiprocessing import Process
@@ -8,6 +9,8 @@ from orkestr8.en_q import start as start_q
 from orkestr8.utils import get_pid_save_location
 
 from .base import Command
+
+logger = logging.getLogger()
 
 
 @dataclass
@@ -28,6 +31,7 @@ class TrainCommand(Command[TrainArgs]):
         m = importlib.import_module(self.args.model_module)
         child_id = os.getpid()
         with open(get_pid_save_location(), "w") as f:
+            logger.info(f"Child PID for training: {child_id}")
             f.write(f"PID: {child_id}")
         m.train()
 

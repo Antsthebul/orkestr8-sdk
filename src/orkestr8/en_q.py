@@ -36,7 +36,7 @@ def file_worker(q: queue.Queue):
 
 def start() -> None:
     """Kicks off process"""
-    p = Process(target=_start)
+    p = Process(target=_start, daemon=True)
     p.start()
 
 
