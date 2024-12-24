@@ -6,11 +6,12 @@ from multiprocessing import Process
 from threading import Thread
 
 from orkestr8.en_q import start as start_q
-from orkestr8.settings import PID_FILE_LOCATION
+from orkestr8.settings import DATA_OUTPUT_FILE_LOCATION, PID_FILE_LOCATION
 
 from .base import Command
 
-logger = logging.getLogger()
+logger = logging.getLogger("data_logger")
+logger.addHandler(logging.FileHandler(DATA_OUTPUT_FILE_LOCATION))
 
 
 @dataclass
