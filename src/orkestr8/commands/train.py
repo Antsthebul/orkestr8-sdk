@@ -10,9 +10,6 @@ from orkestr8.settings import DATA_OUTPUT_FILE_LOCATION, PID_FILE_LOCATION
 
 from .base import Command
 
-logger = logging.getLogger("data_logger")
-logger.addHandler(logging.FileHandler(DATA_OUTPUT_FILE_LOCATION))
-
 
 @dataclass
 class TrainArgs:
@@ -25,6 +22,8 @@ class TrainCommand(Command[TrainArgs]):
         return TrainArgs(args.model_module)
 
     def _run(self):
+        logger = logging.getLogger("data_logger")
+        logger.addHandler(logging.FileHandler(DATA_OUTPUT_FILE_LOCATION))
         t = Thread(target=start_q)
         t.daemon = True
         t.start()
