@@ -6,7 +6,7 @@ from multiprocessing import Process
 from threading import Thread
 
 from orkestr8.en_q import start as start_q
-from orkestr8.utils import PID_FILE_LOCATION
+from orkestr8.settings import PID_FILE_LOCATION
 
 from .base import Command
 

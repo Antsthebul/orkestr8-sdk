@@ -1,6 +1,9 @@
+import importlib
+import os
 import sys
 from abc import ABC, abstractmethod
 from argparse import ArgumentParser, _SubParsersAction
+from pathlib import Path
 from typing import List
 
 
@@ -51,8 +54,12 @@ class BaseParser(ABC):
     @classmethod
     def build_parser_args(cls):
         """Collects all subparsers. Parses Args"""
-
+        # importlib.import_module('')
+        for f in os.listdir(Path(__file__).parent):
+            if f != "base_parser.py" and f.endswith("parser.py"):
+                importlib.import_module(f"orkestr8.parsers.{f.rstrip('.py')}")
         parser = ArgumentParser(prog="Orchkestr8 ML train runner")
+
         subparser = parser.add_subparsers(dest="command", help="Invocation commands")
         for parser_cls in cls.sub_parsers:
             parser_cls.create_sub_parser(subparser)

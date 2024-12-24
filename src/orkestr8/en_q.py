@@ -13,7 +13,7 @@ import threading
 import time
 from multiprocessing import Process
 
-from .utils import DATA_OUTPUT_FILE_LOCATION, QUEUE_PID_FILE_LOCATION
+from orkestr8.settings import DATA_OUTPUT_FILE_LOCATION, QUEUE_PID_FILE_LOCATION
 
 logger = logging.getLogger()
 

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Union
 
-from orkestr8.utils import PID_FILE_LOCATION, QUEUE_PID_FILE_LOCATION
+from orkestr8.settings import PID_FILE_LOCATION, QUEUE_PID_FILE_LOCATION
 
 from .base import Command
 
