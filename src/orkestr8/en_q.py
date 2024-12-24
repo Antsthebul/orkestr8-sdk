@@ -13,7 +13,7 @@ import threading
 import time
 from multiprocessing import Process
 
-from .utils import get_data_output_file, get_queue_pid_file
+from .utils import DATA_OUTPUT_FILE_LOCATION, QUEUE_PID_FILE_LOCATION
 
 logger = logging.getLogger()
 
@@ -21,7 +21,7 @@ logger = logging.getLogger()
 def file_worker(q: queue.Queue):
     last_epoch = None
     while True:
-        with open(get_data_output_file()) as f:
+        with open(DATA_OUTPUT_FILE_LOCATION) as f:
             updated_epoch = None
             if lines := f.readlines():
                 data = lines[-1]
@@ -43,7 +43,7 @@ def start() -> None:
 def _start() -> None:
     """Worker code to invoke"""
 
-    with open(get_queue_pid_file(), "w") as f:
+    with open(QUEUE_PID_FILE_LOCATION, "w") as f:
         pid = os.getpid()
         f.write(f"PID: {pid}")
 

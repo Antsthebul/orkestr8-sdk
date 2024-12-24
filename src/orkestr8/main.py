@@ -6,7 +6,6 @@ from typing import Dict, List, Type
 
 import dotenv
 
-from orkestr8.cli import parse_args
 from orkestr8.commands.base import Command
 from orkestr8.commands.check import CheckCommand
 from orkestr8.commands.download_model import DownloadModelCommand
@@ -15,6 +14,13 @@ from orkestr8.commands.stop import StopCommand
 from orkestr8.commands.test import TestCommand
 from orkestr8.commands.train import TrainCommand
 from orkestr8.commands.update import UpdateCommand
+from orkestr8.parsers.base_parser import BaseParser
+from orkestr8.settings import (
+    DATA_OUTPUT_FILE_LOCATION,
+    LOG_OUTPUT_FILE_LOCATION,
+    QUEUE_PID_FILE_LOCATION,
+)
+from orkestr8.utils import create_file_if_not_exists
 
 logger = logging.getLogger()
 
@@ -61,7 +67,7 @@ def check_env_variables(args):
                 os.environ[v] = attr
 
 
-def run(args) -> None:
+def on_startup(args) -> None:
     # TODO: This could be dynamic. Ensure
     # Underlying package is in system path
     sys.path.extend([os.getcwd(), os.getcwd() + "/foodenie_ml"])
@@ -74,12 +80,27 @@ def run(args) -> None:
         c = command_cls(args)
         c.run()
 
+    for f_name in [
+        LOG_OUTPUT_FILE_LOCATION,
+        DATA_OUTPUT_FILE_LOCATION,
+        QUEUE_PID_FILE_LOCATION,
+    ]:
+        create_file_if_not_exists(f_name)
+
+    setup_logging()
+
 
 def main():
-    args = parse_args()
+    args = BaseParser.build_parser_args()
     logger.debug(args)
     handle_env_vars(args)
-    run(args)
+    on_startup(args)
+
+
+def setup_logging():
+    logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s")
+    logger = logging.getLogger()
+    logger.addHandler(logging.FileHandler(LOG_OUTPUT_FILE_LOCATION))
 
 
 if __name__ == "__main__":

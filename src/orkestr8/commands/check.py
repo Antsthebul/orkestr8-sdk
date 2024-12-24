@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from ..utils import get_pid_save_location
+from ..settings import PID_FILE_LOCATION
 from .base import Command
 
 
@@ -18,7 +18,7 @@ class CheckCommand(Command[CheckArgs]):
     def run(self):
         file = self.args.file
         if file is None:
-            file = get_pid_save_location()
+            file = PID_FILE_LOCATION
 
         with open(file) as f:
             pid = f.read().split(":")[-1].strip()
