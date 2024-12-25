@@ -21,5 +21,5 @@ class TestStopCommand:
             StopCommand(Mock()).run()
 
         # ASSERT
-        assert caplog.record_tuples[0] == "Shutdown COmmand invoked"
-        assert caplog.record_tuples[1] == "Process Shutdown"
+        assert caplog.record_tuples[0][2] == "Shutdown command invoked"
+        assert caplog.record_tuples[1][2] == "Process shutdown complete"

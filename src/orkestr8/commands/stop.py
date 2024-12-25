@@ -51,7 +51,5 @@ class StopCommand(Command[StopArgs]):
 
     def run(self):
         LOGGER.info("Shutdown command invoked")
-        LOGGER.warning("fucking suck")
-        print("your shit", LOGGER.handlers)
         _shut_down_processes()
         LOGGER.info("Process shutdown complete")
