@@ -1,7 +1,6 @@
 import importlib
 import logging
 import os
-import sys
 from dataclasses import dataclass
 from multiprocessing import Process
 from threading import Thread
@@ -23,27 +22,21 @@ class TrainCommand(Command[TrainArgs]):
         return TrainArgs(args.model_module)
 
     def _run(self):
-        logging.basicConfig(level=logging.INFO)
-        logger = logging.getLogger("data_logger")
-        logger.addHandler(logging.FileHandler(DATA_OUTPUT_FILE_LOCATION))
-        t = Thread(target=start_q)
-        t.daemon = True
-        t.start()
+        with open(DATA_OUTPUT_FILE_LOCATION, "a") as data:
+            logging.basicConfig(level=logging.INFO, stream=data)
+            logger = logging.getLogger("data_logger")
+            t = Thread(target=start_q)
+            t.daemon = True
+            t.start()
 
-        m = importlib.import_module(self.args.model_module)
-        child_id = os.getpid()
-        with open(PID_FILE_LOCATION, "w") as f:
-            logger.info(f"Child PID for training: {child_id}")
-            f.write(f"PID: {child_id}")
+            m = importlib.import_module(self.args.model_module)
+            child_id = os.getpid()
+            with open(PID_FILE_LOCATION, "w") as f:
+                logger.info(f"Child PID for training: {child_id}")
+                f.write(f"PID: {child_id}")
 
-            err = sys.stderr
-            out = sys.stdout
-            with open(DATA_OUTPUT_FILE_LOCATION) as log_file:
-                sys.stderr = log_file
-                sys.stdout = log_file
-                m.train()
-                sys.stderr = err
-                sys.stdout = out
+            m.train()
+        data.close()
 
     def run(self):
         """Imports model training module and invokes 'train' function"""
