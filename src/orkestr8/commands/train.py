@@ -1,6 +1,7 @@
 import importlib
 import logging
 import os
+import sys
 from dataclasses import dataclass
 from multiprocessing import Process
 from threading import Thread
@@ -34,7 +35,11 @@ class TrainCommand(Command[TrainArgs]):
         with open(PID_FILE_LOCATION, "w") as f:
             logger.info(f"Child PID for training: {child_id}")
             f.write(f"PID: {child_id}")
-        m.train()
+
+        with open(DATA_OUTPUT_FILE_LOCATION) as log_file:
+            os.dup2(log_file.fileno(), sys.stdout.fileno())
+            os.dup2(log_file.fileno(), sys.stderr.fileno())
+            m.train()
 
     def run(self):
         """Imports model training module and invokes 'train' function"""

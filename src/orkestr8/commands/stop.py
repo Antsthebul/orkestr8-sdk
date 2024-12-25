@@ -14,7 +14,7 @@ PROCESSES: Dict[str, Path] = {
     "QUEUE_PROCESS": QUEUE_PID_FILE_LOCATION,
 }
 
-LOGGER = logging.getLogger()
+LOGGER = logging.getLogger("app")
 
 
 def _shut_down_processes() -> None:

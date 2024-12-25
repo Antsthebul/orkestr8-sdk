@@ -101,7 +101,7 @@ def main():
 
 def setup_logging():
     logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger()
+    logger = logging.getLogger("app")
     format = "[%(asctime)s]: %(message)s"
     formatter = logging.Formatter(fmt=format, datefmt="%Y-%m-%d %H:%M:%s")
     handler = logging.FileHandler(LOG_OUTPUT_FILE_LOCATION)

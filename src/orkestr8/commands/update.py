@@ -14,7 +14,7 @@ from orkestr8.clients.data_lake_client import ClientType, DataLakeClient
 from ..installer import install
 from .base import Command
 
-logger = logging.getLogger()
+logger = logging.getLogger("app")
 
 
 @dataclass
