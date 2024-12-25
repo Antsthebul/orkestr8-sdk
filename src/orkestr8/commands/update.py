@@ -87,7 +87,9 @@ class UpdateCommand(Command[UpdateArgs]):
                 logger.info("Removing backup file")
                 shutil.rmtree(new_name, ignore_errors=True)
             logger.info("Successfully updated")
+
         install()
+
         updated = self.sync_image_data()
         if updated or self.args.generate_new_train_test:
             m = importlib.import_module("utils")

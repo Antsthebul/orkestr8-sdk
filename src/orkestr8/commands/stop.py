@@ -1,5 +1,6 @@
 import logging
 import os
+import signal
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -24,11 +25,15 @@ def _shut_down_processes() -> None:
         with open(file_name) as f:
             pid = f.read().split(":")[-1].strip()
         if pid:
-            os.remove(file_name)
+            # clear file
+            with open(file_name, "w"):
+                pass
+            LOGGER.info(f"Cleared active Orkestr8 process file '{process_name}'")
             for _ in range(10):
-                if not os.path.exists(f"/proc/{pid}"):
+                if os.path.exists(f"/proc/{pid}"):
+                    os.kill(int(pid), signal.SIGTERM)
                     LOGGER.info(
-                        f"Process {pid} has terminated. '{process_name}' has stopped\n"
+                        f"Process ID {pid} has terminated. '{process_name}' has stopped\n"
                     )
                     break
                 time.sleep(1)

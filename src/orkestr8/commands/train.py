@@ -30,6 +30,7 @@ class TrainCommand(Command[TrainArgs]):
 
             logging.basicConfig(level=logging.INFO)
             logger = logging.getLogger("data_logger")
+            app_logger = logging.getLogger("app")
             t = Thread(target=start_q)
             t.daemon = True
             t.start()
@@ -37,7 +38,10 @@ class TrainCommand(Command[TrainArgs]):
             m = importlib.import_module(self.args.model_module)
             child_id = os.getpid()
             with open(PID_FILE_LOCATION, "w") as f:
-                logger.info(f"Child PID for training: {child_id}")
+                _log = f"Child PID for training: {child_id}"
+                logger.info(_log)
+                app_logger.info(_log)
+
                 f.write(f"PID: {child_id}")
 
             m.train()
