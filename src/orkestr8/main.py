@@ -18,6 +18,7 @@ from orkestr8.parsers.base_parser import BaseParser
 from orkestr8.settings import (
     DATA_OUTPUT_FILE_LOCATION,
     LOG_OUTPUT_FILE_LOCATION,
+    PID_FILE_LOCATION,
     QUEUE_PID_FILE_LOCATION,
 )
 from orkestr8.utils import create_file_if_not_exists, setup_logging
@@ -91,6 +92,7 @@ def prepare_files():
         LOG_OUTPUT_FILE_LOCATION,
         DATA_OUTPUT_FILE_LOCATION,
         QUEUE_PID_FILE_LOCATION,
+        PID_FILE_LOCATION,
     ]:
         create_file_if_not_exists(f_name)
 
