@@ -36,10 +36,14 @@ class TrainCommand(Command[TrainArgs]):
             logger.info(f"Child PID for training: {child_id}")
             f.write(f"PID: {child_id}")
 
-        with open(DATA_OUTPUT_FILE_LOCATION) as log_file:
-            os.dup2(log_file.fileno(), sys.stdout.fileno())
-            os.dup2(log_file.fileno(), sys.stderr.fileno())
-            m.train()
+            err = sys.stderr
+            out = sys.stdout
+            with open(DATA_OUTPUT_FILE_LOCATION) as log_file:
+                sys.stderr = log_file
+                sys.stdout = log_file
+                m.train()
+                sys.stderr = err
+                sys.stdout = out
 
     def run(self):
         """Imports model training module and invokes 'train' function"""
