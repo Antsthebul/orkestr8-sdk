@@ -1,6 +1,7 @@
 import importlib
 import logging
 import os
+import sys
 from dataclasses import dataclass
 from multiprocessing import Process
 from threading import Thread
@@ -23,7 +24,11 @@ class TrainCommand(Command[TrainArgs]):
 
     def _run(self):
         with open(DATA_OUTPUT_FILE_LOCATION, "a") as data:
-            logging.basicConfig(level=logging.INFO, stream=data)
+            old_err, old_out = sys.stderr, sys.stdout
+            sys.stdout = StreamToFile(data)
+            sys.stderr = sys.stdout
+
+            logging.basicConfig(level=logging.INFO)
             logger = logging.getLogger("data_logger")
             t = Thread(target=start_q)
             t.daemon = True
@@ -36,9 +41,22 @@ class TrainCommand(Command[TrainArgs]):
                 f.write(f"PID: {child_id}")
 
             m.train()
-        data.close()
+            sys.stderr = old_err
+            sys.stdout = old_out
 
     def run(self):
         """Imports model training module and invokes 'train' function"""
         p = Process(target=self._run)
         p.start()
+
+
+class StreamToFile:
+    def __init__(self, file):
+        self.file = file
+
+    def write(self, data):
+        self.file.write(data)
+        self.file.flush()  # Ensure immediate write to file
+
+    def flush(self):
+        self.file.flush()
