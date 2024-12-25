@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from orkestr8.main import prepare_files
+from orkestr8.main import on_startup
 
 
 @pytest.fixture(autouse=True)
@@ -12,5 +12,5 @@ def set_mock_env_variables():
 
 
 @pytest.fixture(autouse=True)
-def setup_app_files():
-    prepare_files()
+def setup_app():
+    on_startup()

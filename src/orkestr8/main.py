@@ -20,7 +20,7 @@ from orkestr8.settings import (
     LOG_OUTPUT_FILE_LOCATION,
     QUEUE_PID_FILE_LOCATION,
 )
-from orkestr8.utils import create_file_if_not_exists
+from orkestr8.utils import create_file_if_not_exists, setup_logging
 
 logger = logging.getLogger()
 
@@ -67,7 +67,12 @@ def check_env_variables(args):
                 os.environ[v] = attr
 
 
-def on_startup(args) -> None:
+def on_startup() -> None:
+    prepare_files()
+    setup_logging()
+
+
+def parse_args(args) -> None:
     # TODO: This could be dynamic. Ensure
     # Underlying package is in system path
     sys.path.extend([os.getcwd(), os.getcwd() + "/foodenie_ml"])
@@ -79,8 +84,6 @@ def on_startup(args) -> None:
     for command_cls in commands_to_run:
         c = command_cls(args)
         c.run()
-    prepare_files()
-    setup_logging()
 
 
 def prepare_files():
@@ -93,20 +96,11 @@ def prepare_files():
 
 
 def main():
+    on_startup()
     args = BaseParser.build_parser_args()
     logger.debug(args)
     handle_env_vars(args)
-    on_startup(args)
-
-
-def setup_logging():
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger("app")
-    format = "[%(asctime)s]: %(message)s"
-    formatter = logging.Formatter(fmt=format, datefmt="%Y-%m-%d %H:%M:%s")
-    handler = logging.FileHandler(LOG_OUTPUT_FILE_LOCATION)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    parse_args(args)
 
 
 if __name__ == "__main__":
