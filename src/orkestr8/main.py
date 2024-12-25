@@ -79,15 +79,17 @@ def on_startup(args) -> None:
     for command_cls in commands_to_run:
         c = command_cls(args)
         c.run()
+    prepare_files()
+    setup_logging()
 
+
+def prepare_files():
     for f_name in [
         LOG_OUTPUT_FILE_LOCATION,
         DATA_OUTPUT_FILE_LOCATION,
         QUEUE_PID_FILE_LOCATION,
     ]:
         create_file_if_not_exists(f_name)
-
-    setup_logging()
 
 
 def main():
@@ -101,7 +103,7 @@ def setup_logging():
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger()
     format = "[%(asctime)s]: %(message)s"
-    formatter = logging.Formatter(format=format, datefmt="%Y-%m-%d %H:%M:%s")
+    formatter = logging.Formatter(fmt=format, datefmt="%Y-%m-%d %H:%M:%s")
     handler = logging.FileHandler(LOG_OUTPUT_FILE_LOCATION)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
