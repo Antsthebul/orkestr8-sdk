@@ -16,6 +16,6 @@ class TestCommand(Command[TestArg]):
         # Create/overwite mock training script
         with open("orkestr8_mock.py", "w") as server_script:
             current_loc = Path(__file__).parent.parent
-            with open(current_loc / "test_script.py") as f:
+            with open(current_loc / "mock_train.py") as f:
                 data = f.read()
             server_script.write(data)
