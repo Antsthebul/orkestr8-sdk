@@ -98,9 +98,13 @@ def main():
 
 
 def setup_logging():
-    logging.basicConfig(level=logging.INFO, format="[%(asctime)s]: %(message)s")
+    logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger()
-    logger.addHandler(logging.FileHandler(LOG_OUTPUT_FILE_LOCATION))
+    format = "[%(asctime)s]: %(message)s"
+    formatter = logging.Formatter(format=format, datefmt="%Y-%m-%d %H:%M:%s")
+    handler = logging.FileHandler(LOG_OUTPUT_FILE_LOCATION)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
 
 
 if __name__ == "__main__":

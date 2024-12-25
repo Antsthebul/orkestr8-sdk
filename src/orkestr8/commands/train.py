@@ -22,6 +22,7 @@ class TrainCommand(Command[TrainArgs]):
         return TrainArgs(args.model_module)
 
     def _run(self):
+        logging.basicConfig(level=logging.INFO)
         logger = logging.getLogger("data_logger")
         logger.addHandler(logging.FileHandler(DATA_OUTPUT_FILE_LOCATION))
         t = Thread(target=start_q)
